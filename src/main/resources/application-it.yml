@@ -11,3 +11,25 @@ spring:
     url: jdbc:tc:mariadb:10.6.14:///
   flyway:
     enabled: true
+
+  security:
+    oauth2:
+      client:
+        provider:
+          sms-sender:
+            token-uri: http://localhost:${wiremock.server.port}/token
+          teams-sender:
+            token-uri: http://localhost:${wiremock.server.port}/token
+        registration:
+          sms-sender:
+            client-id: the-client-id
+            client-secret: the-client-secret
+          teams-sender:
+            client-id: the-client-id
+            client-secret: the-client-secret
+
+integration:
+  sms-sender:
+    base-url: http://localhost:${wiremock.server.port}/sms-sender
+  teams-sender:
+    base-url: http://localhost:${wiremock.server.port}/teams-sender
