@@ -4,23 +4,41 @@
 logging:
   level:
     root: INFO
+    org.springframework.jdbc.core.JdbcTemplate: INFO
 openapi:
   name: ${spring.application.name}
   title: ${spring.application.name}
   version: '@project.version@'
 
+server:
+  port: ${SERVER_PORT:8080}
 
 spring:
   application:
     name: notifier
+  #----------------------------------------
+  # Single datasource for all modules (messaging JPA + csvimport JdbcTemplate)
+  #----------------------------------------
   datasource:
+    url: ${ENV_DB_URL}
     username: ${ENV_DB_USERNAME}
     password: ${ENV_DB_PASSWORD}
-    url: ${ENV_DB_URL}
-
+    driver-class-name: org.mariadb.jdbc.Driver
+  jpa:
+    properties:
+      jakarta:
+        persistence:
+          schema-generation:
+            database:
+              action: validate
   flyway:
     enabled: true
-
+  jdbc:
+    template:
+      fetch-size: 1000
+  #----------------------------------------
+  # Outbound OAuth2 client-credentials (messaging -> sms-sender / teams-sender)
+  #----------------------------------------
   security:
     oauth2:
       client:
@@ -39,15 +57,65 @@ spring:
             client-secret: ${ENV_TEAMS_SENDER_CLIENT_SECRET}
             authorization-grant-type: client_credentials
 
+#----------------------------------------
+# JWT (security module): issuance on login + validation on every /api/** request
+#----------------------------------------
 jwt:
   secret: ${JWT_SECRET}
+  expiration: ${JWT_EXPIRATION}
 
-server:
-  port: 8082
+#----------------------------------------
+# Bootstrap admin (users module — DataInitializer)
+#----------------------------------------
+user:
+  credentials:
+    email: ${USER_CREDENTIALS_EMAIL}
+    password: ${USER_CREDENTIALS_PASSWORD}
+    phoneNumber: ${USER_CREDENTIALS_PHONENUMBER}
+    municipalityId: ${USER_CREDENTIALS_MUNICIPALITYID}
 
+#----------------------------------------
+# Downstream HTTP integrations
+#----------------------------------------
 integration:
   sms-sender:
     base-url: ${ENV_SMS_SENDER_BASE_URL}
     sender: Sundsvall
   teams-sender:
     base-url: ${ENV_TEAMS_SENDER_BASE_URL}
+  # csvimport SFTP source
+  sftp:
+    username: ${SFTP_USERNAME}
+    password: ${SFTP_PASSWORD}
+    remote-host: ${SFTP_URL}
+    connect-timeout: "PT15S"
+    session-timeout: "PT15S"
+
+#----------------------------------------
+# csvimport batch settings
+#----------------------------------------
+import:
+  enabled: true
+  # File locations
+  incoming-dir: /data/incoming
+  processed-dir: /data/processed
+  failed-dir: /data/failed
+  file-source-dir: /data/temp
+  # Expected file names
+  org-file-name: ${ORGANIZATION_FILE_NAME}
+  emp-file-name: ${EMPLOYEE_FILE_NAME}
+  # Batch size
+  employee-batch-size: ${EMPLOYEE_BATCH_SIZE}
+  organization-batch-size: ${ORGANIZATION_BATCH_SIZE}
+
+scheduler:
+  scheduled-org-import:
+    cron: "0 0 * * * *"
+    name: "org-import"
+    shedlock-lock-at-most-for: "PT2H"
+    maximum-execution-time: "PT2H"
+  scheduled-emp-import:
+    cron: "0 0 * * * *"
+    name: "emp-import"
+    shedlock-lock-at-most-for: "PT2H"
+    maximum-execution-time: "PT2H"
