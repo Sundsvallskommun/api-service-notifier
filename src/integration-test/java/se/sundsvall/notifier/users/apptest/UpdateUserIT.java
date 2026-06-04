@@ -32,7 +32,7 @@ class UpdateUserIT extends AbstractAppTest {
     private UserRepository userRepository;
 
     @Test
-    void test01_UpdateUserWithId() {
+    void test01_updateUserWithId() {
         final Long id = 1L;
 
         assertThat(userRepository.findById(id)).isPresent();
@@ -56,7 +56,7 @@ class UpdateUserIT extends AbstractAppTest {
     }
 
     @Test
-    void test02_UpdateUserWithIdNotFound() {
+    void test02_updateUserWithIdNotFound() {
         setupCall()
                 .withServicePath("/api/users/ids/999")
                 .withHttpMethod(HttpMethod.PATCH)

@@ -31,7 +31,7 @@ class DeleteUserIT extends AbstractAppTest {
     private UserRepository userRepository;
 
     @Test
-    void test01_DeleteUserByEmail() {
+    void test01_deleteUserByEmail() {
 
         final String email = "testmail1@sundsvall.se";
 
@@ -48,7 +48,7 @@ class DeleteUserIT extends AbstractAppTest {
     }
 
     @Test
-    void test02_DeleteUserId() {
+    void test02_deleteUserId() {
 
         final Long id = 1L;
 
