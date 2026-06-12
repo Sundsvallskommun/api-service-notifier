@@ -13,9 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.notifier.messaging.api.model.response.OrganizationResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.OrganizationRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.OrganizationRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -40,8 +40,8 @@ public class OrganizationServiceTest {
 	void getAllOrganizations() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org1 = new Organization();
-		var org2 = new Organization();
+		var org1 = new OrganizationEntity();
+		var org2 = new OrganizationEntity();
 
 		var response1 = mock(OrganizationResponse.class);
 		var response2 = mock(OrganizationResponse.class);
@@ -63,7 +63,7 @@ public class OrganizationServiceTest {
 
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org = new Organization();
+		var org = new OrganizationEntity();
 		var response = mock(OrganizationResponse.class);
 
 		when(organizationRepository.findByOrgId("orgId")).thenReturn(Optional.of(org));
@@ -78,8 +78,8 @@ public class OrganizationServiceTest {
 	void getOrgsByIds_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org1 = new Organization();
-		var org2 = new Organization();
+		var org1 = new OrganizationEntity();
+		var org2 = new OrganizationEntity();
 
 		var response1 = mock(OrganizationResponse.class);
 		var response2 = mock(OrganizationResponse.class);
@@ -97,8 +97,8 @@ public class OrganizationServiceTest {
 	void getOrgChildrenAndDescendantsWithId_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org1 = new Organization();
-		var org2 = new Organization();
+		var org1 = new OrganizationEntity();
+		var org2 = new OrganizationEntity();
 
 		var response1 = mock(OrganizationResponse.class);
 		var response2 = mock(OrganizationResponse.class);
@@ -116,8 +116,8 @@ public class OrganizationServiceTest {
 	void getOrgAndChildrenWithId_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org1 = new Organization();
-		var org2 = new Organization();
+		var org1 = new OrganizationEntity();
+		var org2 = new OrganizationEntity();
 
 		var response1 = mock(OrganizationResponse.class);
 		var response2 = mock(OrganizationResponse.class);
@@ -200,13 +200,13 @@ public class OrganizationServiceTest {
 	void getOrganizationWithSearch_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var org1 = new Organization();
-		var org2 = new Organization();
+		var org1 = new OrganizationEntity();
+		var org2 = new OrganizationEntity();
 		var response1 = mock(OrganizationResponse.class);
 		var response2 = mock(OrganizationResponse.class);
 
 		Pageable pageable = PageRequest.of(0, 2);
-		Page<Organization> result = new PageImpl<>(List.of(org1, org2), pageable, 2);
+		Page<OrganizationEntity> result = new PageImpl<>(List.of(org1, org2), pageable, 2);
 
 		when(organizationRepository.findByNameContaining("search", pageable)).thenReturn(result);
 		when(mapper.mapToOrganizationResponse(org1)).thenReturn(response1);
@@ -221,19 +221,19 @@ public class OrganizationServiceTest {
 	void getChildrenReplaceDuplicateDescendantsWithRoot_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var top = new Organization();
+		var top = new OrganizationEntity();
 		top.setOrgId("orgIdTop");
 		top.setParentOrgId("parentOrgId");
 		top.setName("duplicateOrg");
 		top.setTreeLevel(2);
 
-		var middle = new Organization();
+		var middle = new OrganizationEntity();
 		middle.setOrgId("orgIdMiddle");
 		middle.setParentOrgId("orgIdTop");
 		middle.setName("duplicateOrg");
 		middle.setTreeLevel(3);
 
-		var bottom = new Organization();
+		var bottom = new OrganizationEntity();
 		bottom.setOrgId("orgIdBottom");
 		bottom.setParentOrgId("orgIdMiddle");
 		bottom.setName("duplicateOrg");
@@ -272,28 +272,28 @@ public class OrganizationServiceTest {
 	void getChildrenReplaceDuplicateDescendantsWithRoot_addsResolvedChildWhenChildHasChildren() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var top = new Organization();
+		var top = new OrganizationEntity();
 		top.setOrgId("orgIdTop");
 		top.setParentOrgId("parentOrgId");
 		top.setName("duplicateOrg");
 
-		var middle = new Organization();
+		var middle = new OrganizationEntity();
 		middle.setOrgId("orgIdMiddle");
 		middle.setParentOrgId("orgIdTop");
 		middle.setName("duplicateOrg");
 
-		var bottom = new Organization();
+		var bottom = new OrganizationEntity();
 		bottom.setOrgId("orgIdChild");
 		bottom.setParentOrgId("orgIdMiddle");
 		bottom.setName("duplicateOrg");
 		bottom.setChildren(Set.of());
 
-		var branch = new Organization();
+		var branch = new OrganizationEntity();
 		branch.setOrgId("orgIdBranch");
 		branch.setParentOrgId("orgIdMiddle");
 		branch.setName("branch");
 
-		var branchChild = new Organization();
+		var branchChild = new OrganizationEntity();
 		branchChild.setOrgId("orgIdBranchChild");
 		branchChild.setParentOrgId("orgIdBranch");
 		branchChild.setName("branchChild");

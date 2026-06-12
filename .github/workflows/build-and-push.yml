@@ -1,4 +1,4 @@
-name: Call Build and Push Image
+name: "Call Build and Push Image"
 
 on:
   workflow_dispatch:

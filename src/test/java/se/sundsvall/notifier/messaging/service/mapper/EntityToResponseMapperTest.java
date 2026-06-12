@@ -6,9 +6,9 @@ import org.junit.jupiter.api.Test;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeManagerResponse;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeWithOrgNameResponse;
 import se.sundsvall.notifier.messaging.api.model.response.OrganizationResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Group;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,7 +20,7 @@ public class EntityToResponseMapperTest {
 	void mapToGroupResponse_withEmployee() {
 		var createdAt = LocalDateTime.of(2025, 2, 1, 20, 15);
 
-		var group = Group.builder()
+		var group = GroupEntity.builder()
 			.withId(1L)
 			.withName("testGroup")
 			.withDescription("testDescription")
@@ -28,10 +28,10 @@ public class EntityToResponseMapperTest {
 			.withCreatedAt(createdAt)
 			.build();
 
-		var org = new Organization();
+		var org = new OrganizationEntity();
 		org.setName("org1");
 
-		var emp1 = new Employee();
+		var emp1 = new EmployeeEntity();
 		emp1.setPersonId("p1");
 		emp1.setOrgId("org1");
 		emp1.setFirstName("firstName1");
@@ -54,7 +54,7 @@ public class EntityToResponseMapperTest {
 
 	@Test
 	void mapToGroupResponse_withoutEmployees() {
-		var group = Group.builder()
+		var group = GroupEntity.builder()
 			.withId(1L)
 			.withName("testGroup")
 			.withDescription("testDescription")
@@ -72,10 +72,10 @@ public class EntityToResponseMapperTest {
 
 	@Test
 	void mapToEmployeeWithOrgName() {
-		var organization = new Organization();
+		var organization = new OrganizationEntity();
 		organization.setName("Sundsvalls kommun");
 
-		var employee = new Employee();
+		var employee = new EmployeeEntity();
 		employee.setId(123L);
 		employee.setPersonId("p1");
 		employee.setOrgId("org1");
@@ -103,7 +103,7 @@ public class EntityToResponseMapperTest {
 
 	@Test
 	void mapToOrganizationResponse() {
-		var organization = new Organization();
+		var organization = new OrganizationEntity();
 		organization.setCompanyId("556000-0000");
 		organization.setParentOrgId("parent-1");
 		organization.setOrgId("org-1");
@@ -121,7 +121,7 @@ public class EntityToResponseMapperTest {
 
 	@Test
 	void mapToEmployeeManagerResponse() {
-		var emp = new Employee();
+		var emp = new EmployeeEntity();
 		emp.setId(123L);
 		emp.setPersonId("p1");
 		emp.setOrgId("org1");

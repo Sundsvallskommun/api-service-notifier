@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import se.sundsvall.notifier.csvimport.db.dto.OrganizationDTO;
+import se.sundsvall.notifier.csvimport.model.OrganizationDTO;
 import se.sundsvall.notifier.csvimport.service.utility.ImportUtil;
 import se.sundsvall.notifier.messaging.ingestion.DirectoryIngestionService;
 import se.sundsvall.notifier.messaging.ingestion.OrganizationRecord;

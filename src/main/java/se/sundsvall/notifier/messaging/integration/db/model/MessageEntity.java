@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.messaging.integration.db.entity;
+package se.sundsvall.notifier.messaging.integration.db.model;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -29,7 +29,7 @@ import se.sundsvall.notifier.messaging.api.model.request.MessageType;
 @Builder(setterPrefix = "with")
 @Entity
 @Table(name = "message")
-public class Message {
+public class MessageEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +50,7 @@ public class Message {
 
 	@OneToMany(mappedBy = "message", cascade = CascadeType.ALL, orphanRemoval = true)
 	@Builder.Default
-	private Set<MessageRecipient> recipients = new HashSet<>();
+	private Set<MessageRecipientEntity> recipients = new HashSet<>();
 
 	@Enumerated(EnumType.STRING)
 	@Column(name = "message_type", nullable = false, length = 20)
@@ -63,7 +63,7 @@ public class Message {
 		}
 	}
 
-	public void addRecipient(MessageRecipient recipient) {
+	public void addRecipient(MessageRecipientEntity recipient) {
 		if (recipient == null)
 			return;
 
@@ -75,7 +75,7 @@ public class Message {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof Message message))
+		if (!(o instanceof MessageEntity message))
 			return false;
 		return id != null && Objects.equals(id, message.id);
 	}
@@ -87,7 +87,7 @@ public class Message {
 
 	@Override
 	public String toString() {
-		return "Message{" +
+		return "MessageEntity{" +
 			"id=" + id +
 			", title='" + title + '\'' +
 			", content='" + content + '\'' +

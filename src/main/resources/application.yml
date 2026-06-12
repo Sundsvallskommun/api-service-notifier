@@ -36,26 +36,6 @@ spring:
   jdbc:
     template:
       fetch-size: 1000
-  #----------------------------------------
-  # Outbound OAuth2 client-credentials (messaging -> sms-sender / teams-sender)
-  #----------------------------------------
-  security:
-    oauth2:
-      client:
-        provider:
-          sms-sender:
-            token-uri: ${ENV_SMS_SENDER_TOKEN_URL}
-          teams-sender:
-            token-uri: ${ENV_TEAMS_SENDER_TOKEN_URL}
-        registration:
-          sms-sender:
-            client-id: ${ENV_SMS_SENDER_CLIENT_ID}
-            client-secret: ${ENV_SMS_SENDER_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
-          teams-sender:
-            client-id: ${ENV_TEAMS_SENDER_CLIENT_ID}
-            client-secret: ${ENV_TEAMS_SENDER_CLIENT_SECRET}
-            authorization-grant-type: client_credentials
 
 #----------------------------------------
 # JWT (security module): issuance on login + validation on every /api/** request

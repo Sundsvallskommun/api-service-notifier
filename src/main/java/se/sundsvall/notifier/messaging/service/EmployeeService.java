@@ -8,7 +8,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeManagerResponse;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeWithOrgNameResponse;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 @Service

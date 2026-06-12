@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.service.Mapper;
+package se.sundsvall.notifier.users.service.mapper;
 
 import java.util.Optional;
 import org.springframework.stereotype.Component;

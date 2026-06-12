@@ -14,10 +14,10 @@ import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.notifier.messaging.api.model.request.GroupRequest;
 import se.sundsvall.notifier.messaging.api.model.request.GroupUpdateRequest;
 import se.sundsvall.notifier.messaging.api.model.response.GroupResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Group;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.GroupRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.GroupRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -44,7 +44,7 @@ public class GroupServiceTest {
 	private EmployeeRepository employeeRepositoryMock;
 
 	@Captor
-	ArgumentCaptor<Group> groupCaptor;
+	ArgumentCaptor<GroupEntity> groupCaptor;
 
 	@InjectMocks
 	private GroupService groupService;
@@ -64,10 +64,10 @@ public class GroupServiceTest {
 
 	@Test
 	void getAllGroups_groupsFound() {
-		var group1 = new Group();
+		var group1 = new GroupEntity();
 		group1.setId(1L);
 
-		var group2 = new Group();
+		var group2 = new GroupEntity();
 		group2.setId(2L);
 
 		when(groupRepositoryMock.findAll()).thenReturn(List.of(group1, group2));
@@ -104,11 +104,11 @@ public class GroupServiceTest {
 	void getGroupsByCreatorId_groupsFound() {
 		var creatorId = "creatorId";
 
-		var group1 = new Group();
+		var group1 = new GroupEntity();
 		group1.setId(1L);
 		group1.setCreatorId(creatorId);
 
-		var group2 = new Group();
+		var group2 = new GroupEntity();
 		group2.setId(2L);
 		group2.setCreatorId(creatorId);
 
@@ -134,7 +134,7 @@ public class GroupServiceTest {
 	@Test
 	void getGroupById_groupFound() {
 		var groupId = 1L;
-		var group = new Group();
+		var group = new GroupEntity();
 		group.setId(groupId);
 
 		when(groupRepositoryMock.findById(groupId)).thenReturn(Optional.of(group));
@@ -178,15 +178,15 @@ public class GroupServiceTest {
 			.withEmployees(Set.of(10L, 20L))
 			.build();
 
-		var e1 = mock(Employee.class);
-		var e2 = mock(Employee.class);
+		var e1 = mock(EmployeeEntity.class);
+		var e2 = mock(EmployeeEntity.class);
 		var employees = Set.of(e1, e2);
 
 		when(employeeRepositoryMock.findAllByIdIn(request.employees())).thenReturn(employees);
 
-		var saved = new Group();
+		var saved = new GroupEntity();
 		saved.setId(123L);
-		when(groupRepositoryMock.save(any(Group.class))).thenReturn(saved);
+		when(groupRepositoryMock.save(any(GroupEntity.class))).thenReturn(saved);
 
 		var id = groupService.createGroup(request);
 
@@ -233,7 +233,7 @@ public class GroupServiceTest {
 	void updateGroup_found_updateAndReturnId() {
 		var groupId = 1L;
 
-		var existing = new Group();
+		var existing = new GroupEntity();
 		existing.setId(groupId);
 		existing.setName("Old name");
 		existing.setDescription("Old description");
@@ -247,13 +247,13 @@ public class GroupServiceTest {
 			.withEmployees(Set.of(10L, 20L))
 			.build();
 
-		var emp1 = mock(Employee.class);
-		var emp2 = mock(Employee.class);
+		var emp1 = mock(EmployeeEntity.class);
+		var emp2 = mock(EmployeeEntity.class);
 		var employees = Set.of(emp1, emp2);
 
 		when(employeeRepositoryMock.findAllByIdIn(request.employees())).thenReturn(employees);
 
-		when(groupRepositoryMock.save(any(Group.class))).thenAnswer(invocation -> invocation.getArgument(0));
+		when(groupRepositoryMock.save(any(GroupEntity.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
 		var response = GroupResponse.builder()
 			.withId(groupId)
@@ -262,7 +262,7 @@ public class GroupServiceTest {
 			.withCreatorId("creator-123")
 			.build();
 
-		when(mapper.mapToGroupResponse(any(Group.class))).thenReturn(response);
+		when(mapper.mapToGroupResponse(any(GroupEntity.class))).thenReturn(response);
 
 		var result = groupService.updateGroup(groupId, request);
 
@@ -288,7 +288,7 @@ public class GroupServiceTest {
 	@Test
 	void deleteGroup_found() {
 		var groupId = 1L;
-		var group = new Group();
+		var group = new GroupEntity();
 		group.setId(groupId);
 
 		when(groupRepositoryMock.findById(groupId)).thenReturn(Optional.of(group));

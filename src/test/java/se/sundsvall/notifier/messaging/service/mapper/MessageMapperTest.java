@@ -6,10 +6,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.notifier.messaging.api.model.request.MessageRequest;
 import se.sundsvall.notifier.messaging.api.model.request.MessageType;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -41,23 +41,23 @@ class MessageMapperTest {
 	@Test
 	void toMessageResponseTest() {
 		var createdAt = LocalDateTime.now();
-		var organization = new Organization();
+		var organization = new OrganizationEntity();
 		organization.setName("IT Department");
 
-		var employee = new Employee();
+		var employee = new EmployeeEntity();
 		employee.setId(1L);
 		employee.setFirstName("John");
 		employee.setLastName("Doe");
 		employee.setOrganization(organization);
 
-		var messageRecipient = MessageRecipient.builder()
+		var messageRecipient = MessageRecipientEntity.builder()
 			.withEmployee(employee)
 			.withWorkTitle("Developer")
 			.withOrgId("123")
-			.withDeliveryStatus(MessageRecipient.DeliveryStatus.DELIVERED)
+			.withDeliveryStatus(MessageRecipientEntity.DeliveryStatus.DELIVERED)
 			.build();
 
-		var message = Message.builder()
+		var message = MessageEntity.builder()
 			.withId(1L)
 			.withTitle("title")
 			.withContent("content")
@@ -79,23 +79,23 @@ class MessageMapperTest {
 	@Test
 	void toMessageWithRecipientResponseTest() {
 		var createdAt = LocalDateTime.now();
-		var organization = new Organization();
+		var organization = new OrganizationEntity();
 		organization.setName("IT Department");
 
-		var employee = new Employee();
+		var employee = new EmployeeEntity();
 		employee.setId(1L);
 		employee.setFirstName("John");
 		employee.setLastName("Doe");
 		employee.setOrganization(organization);
 
-		var messageRecipient = MessageRecipient.builder()
+		var messageRecipient = MessageRecipientEntity.builder()
 			.withEmployee(employee)
 			.withWorkTitle("Developer")
 			.withOrgId("123")
-			.withDeliveryStatus(MessageRecipient.DeliveryStatus.DELIVERED)
+			.withDeliveryStatus(MessageRecipientEntity.DeliveryStatus.DELIVERED)
 			.build();
 
-		var message = Message.builder()
+		var message = MessageEntity.builder()
 			.withId(1L)
 			.withTitle("title")
 			.withContent("content")
@@ -146,8 +146,8 @@ class MessageMapperTest {
 
 	@Test
 	void toMessageRecipientTest() {
-		var employee = new Employee();
-		var status = MessageRecipient.DeliveryStatus.DELIVERED;
+		var employee = new EmployeeEntity();
+		var status = MessageRecipientEntity.DeliveryStatus.DELIVERED;
 
 		var result = messageMapper.toMessageRecipient(employee, status);
 		assertThat(result).isNotNull();
@@ -157,10 +157,10 @@ class MessageMapperTest {
 
 	@Test
 	void mapToRecipientResponseTest() {
-		var organization = new Organization();
+		var organization = new OrganizationEntity();
 		organization.setName("TestOrg");
 
-		var employee = new Employee();
+		var employee = new EmployeeEntity();
 		employee.setId(100L);
 		employee.setFirstName("John");
 		employee.setLastName("Doe");
@@ -169,10 +169,10 @@ class MessageMapperTest {
 
 		var receivedAt = LocalDateTime.of(2025, 2, 1, 10, 0);
 
-		var messageRecipient = new MessageRecipient();
+		var messageRecipient = new MessageRecipientEntity();
 		messageRecipient.setEmployee(employee);
 		messageRecipient.setOrgId("org1");
-		messageRecipient.setDeliveryStatus(MessageRecipient.DeliveryStatus.DELIVERED);
+		messageRecipient.setDeliveryStatus(MessageRecipientEntity.DeliveryStatus.DELIVERED);
 		messageRecipient.setReceivedAt(receivedAt);
 
 		var result = messageMapper.mapToRecipientResponse(messageRecipient);

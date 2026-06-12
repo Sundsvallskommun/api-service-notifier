@@ -4,7 +4,7 @@ import com.google.code.beanmatchers.BeanMatchers;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
@@ -24,7 +24,7 @@ public class OrganizationEntityTest {
 
 	@Test
 	void testBean() {
-		org.hamcrest.MatcherAssert.assertThat(Organization.class, allOf(
+		org.hamcrest.MatcherAssert.assertThat(OrganizationEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),

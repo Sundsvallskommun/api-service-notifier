@@ -7,17 +7,17 @@ import se.sundsvall.notifier.messaging.api.model.request.Priority;
 import se.sundsvall.notifier.messaging.api.model.response.MessageRecipientResponse;
 import se.sundsvall.notifier.messaging.api.model.response.MessageResponse;
 import se.sundsvall.notifier.messaging.api.model.response.MessageWithRecipientsResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
 import se.sundsvall.notifier.messaging.integration.smssender.SmsDto;
 import se.sundsvall.notifier.messaging.integration.teamssender.TeamsSenderDTO;
 
 @Component
 public class MessageMapper {
 
-	public Message toEntity(MessageRequest messageRequest) {
-		return Message.builder()
+	public MessageEntity toEntity(MessageRequest messageRequest) {
+		return MessageEntity.builder()
 			.withTitle(messageRequest.title())
 			.withContent(messageRequest.content())
 			.withSender(messageRequest.sender())
@@ -25,7 +25,7 @@ public class MessageMapper {
 			.build();
 	}
 
-	public MessageResponse entityToMessageResponse(Message message) {
+	public MessageResponse entityToMessageResponse(MessageEntity message) {
 		if (message == null) {
 			return null;
 		}
@@ -41,7 +41,7 @@ public class MessageMapper {
 
 	}
 
-	public MessageWithRecipientsResponse entityToMessageWithRecipientsResponse(Message message) {
+	public MessageWithRecipientsResponse entityToMessageWithRecipientsResponse(MessageEntity message) {
 		if (message == null) {
 			return null;
 		}
@@ -84,14 +84,14 @@ public class MessageMapper {
 			.build();
 	}
 
-	public MessageRecipient toMessageRecipient(Employee employee, MessageRecipient.DeliveryStatus deliveryStatus) {
-		return MessageRecipient.builder()
+	public MessageRecipientEntity toMessageRecipient(EmployeeEntity employee, MessageRecipientEntity.DeliveryStatus deliveryStatus) {
+		return MessageRecipientEntity.builder()
 			.withEmployee(employee)
 			.withDeliveryStatus(deliveryStatus)
 			.build();
 	}
 
-	public MessageRecipientResponse mapToRecipientResponse(MessageRecipient messageRecipient) {
+	public MessageRecipientResponse mapToRecipientResponse(MessageRecipientEntity messageRecipient) {
 		return MessageRecipientResponse.builder()
 			.withEmployeeId(messageRecipient.getEmployee().getId())
 			.withFirstName(messageRecipient.getEmployee().getFirstName())

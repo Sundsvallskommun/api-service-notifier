@@ -13,12 +13,12 @@ import se.sundsvall.notifier.messaging.api.model.request.MessageRequestWithoutRe
 import se.sundsvall.notifier.messaging.api.model.request.MessageType;
 import se.sundsvall.notifier.messaging.api.model.response.MessageRecipientResponse;
 import se.sundsvall.notifier.messaging.api.model.response.MessageResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.MessageRecipientRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.MessageRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.MessageRecipientRepository;
+import se.sundsvall.notifier.messaging.integration.db.MessageRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
 import se.sundsvall.notifier.messaging.integration.smssender.MessageStatus;
 import se.sundsvall.notifier.messaging.integration.smssender.SmsSenderIntegration;
 import se.sundsvall.notifier.messaging.integration.teamssender.TeamsSenderIntegration;
@@ -59,15 +59,15 @@ public class MessageService {
 
 		var employees = employeeRepository.findAllById(messageRequest.recipientEmployeeIds());
 
-		for (Employee employee : employees) {
+		for (EmployeeEntity employee : employees) {
 			try {
 				var delivered = sendMessageToEmployee(employee, messageRequest.messageType(), messageRequest.content());
-				MessageRecipient messageRecipient = messageMapper.toMessageRecipient(employee, delivered);
+				MessageRecipientEntity messageRecipient = messageMapper.toMessageRecipient(employee, delivered);
 				messageRecipient.setMessage(savedMessage);
 				messageRecipientRepository.save(messageRecipient);
 			} catch (Exception e) {
 				log.error("Failed to send to employee {}", employee.getId(), e);
-				MessageRecipient messageRecipient = messageMapper.toMessageRecipient(employee, MessageRecipient.DeliveryStatus.FAILED);
+				MessageRecipientEntity messageRecipient = messageMapper.toMessageRecipient(employee, MessageRecipientEntity.DeliveryStatus.FAILED);
 				messageRecipient.setMessage(savedMessage);
 				messageRecipientRepository.save(messageRecipient);
 			}
@@ -77,7 +77,7 @@ public class MessageService {
 	@Async
 	public void sendMessageToAll(MessageRequestWithoutRecipient messageRequest) {
 
-		var message = Message.builder()
+		var message = MessageEntity.builder()
 			.withTitle(messageRequest.title())
 			.withContent(messageRequest.content())
 			.withSender(messageRequest.sender())
@@ -89,19 +89,19 @@ public class MessageService {
 		int page = 0;
 		int size = 200;
 		int processed = 0;
-		Page<Employee> employeePage;
+		Page<EmployeeEntity> employeePage;
 
 		do {
 			employeePage = employeeRepository.findByActiveEmployeeTrue(PageRequest.of(page, size));
 
-			for (Employee employee : employeePage.getContent()) {
+			for (EmployeeEntity employee : employeePage.getContent()) {
 				try {
 					var delivered = sendMessageToEmployee(employee, messageRequest.messageType(), messageRequest.content());
 					var recipient = messageMapper.toMessageRecipient(employee, delivered);
 					recipient.setMessage(savedMessage);
 					messageRecipientRepository.save(recipient);
 				} catch (Exception e) {
-					var recipient = messageMapper.toMessageRecipient(employee, MessageRecipient.DeliveryStatus.FAILED);
+					var recipient = messageMapper.toMessageRecipient(employee, MessageRecipientEntity.DeliveryStatus.FAILED);
 					recipient.setMessage(savedMessage);
 					messageRecipientRepository.save(recipient);
 				}
@@ -130,7 +130,7 @@ public class MessageService {
 		messageRepository.deleteById(id);
 	}
 
-	public MessageRecipient.DeliveryStatus sendMessageToEmployee(Employee employee, MessageType messageType, String content) {
+	public MessageRecipientEntity.DeliveryStatus sendMessageToEmployee(EmployeeEntity employee, MessageType messageType, String content) {
 		boolean teamsSuccess = false;
 		MessageStatus smsSuccess = MessageStatus.NOT_SENT;
 		boolean isTeamsMessage = messageType == MessageType.TEAMS || messageType == MessageType.TEAMS_AND_SMS;
@@ -154,8 +154,8 @@ public class MessageService {
 				messageMapper.toSendSmsDto(content, phoneNumber));
 		}
 		return (teamsSuccess || smsSuccess == MessageStatus.SENT)
-			? MessageRecipient.DeliveryStatus.DELIVERED
-			: MessageRecipient.DeliveryStatus.FAILED;
+			? MessageRecipientEntity.DeliveryStatus.DELIVERED
+			: MessageRecipientEntity.DeliveryStatus.FAILED;
 	}
 
 	public Page<MessageRecipientResponse> getRecipientsWithMessageId(Long id, Pageable pageable) {

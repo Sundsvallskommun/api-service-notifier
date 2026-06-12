@@ -7,7 +7,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.notifier.users.api.model.UserRequest;
 import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
-import se.sundsvall.notifier.users.service.Mapper.UserMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 

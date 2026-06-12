@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.messaging.integration.db.entity;
+package se.sundsvall.notifier.messaging.integration.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -26,7 +26,7 @@ import lombok.Setter;
 @Builder(setterPrefix = "with")
 @Entity
 @Table(name = "message_recipient")
-public class MessageRecipient {
+public class MessageRecipientEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,11 +34,11 @@ public class MessageRecipient {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "message_id", nullable = false)
-	private Message message;
+	private MessageEntity message;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "employee_id", nullable = false)
-	private Employee employee;
+	private EmployeeEntity employee;
 
 	@Column(name = "org_id", nullable = false)
 	private String orgId;
@@ -74,7 +74,7 @@ public class MessageRecipient {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof MessageRecipient that))
+		if (!(o instanceof MessageRecipientEntity that))
 			return false;
 		return id != null && id.equals(that.id);
 	}
@@ -86,7 +86,7 @@ public class MessageRecipient {
 
 	@Override
 	public String toString() {
-		return "MessageRecipient{" +
+		return "MessageRecipientEntity{" +
 			"id=" + id +
 			", orgId=" + orgId +
 			", workTitle='" + workTitle + '\'' +

@@ -5,8 +5,8 @@ import java.time.LocalDateTime;
 import java.util.HashSet;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
@@ -27,7 +27,7 @@ public class MessageEntityTest {
 
 	@Test
 	void testBean() {
-		org.hamcrest.MatcherAssert.assertThat(Message.class, allOf(
+		org.hamcrest.MatcherAssert.assertThat(MessageEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),
@@ -42,7 +42,7 @@ public class MessageEntityTest {
 		final var content = "content";
 		final var sender = "sender";
 
-		var message = Message.builder()
+		var message = MessageEntity.builder()
 			.withTitle(title)
 			.withContent(content)
 			.withSender(sender)
@@ -55,7 +55,7 @@ public class MessageEntityTest {
 
 	@Test
 	void onCreate_createdAt_null() {
-		var message = new Message();
+		var message = new MessageEntity();
 		message.setCreatedAt(null);
 
 		message.onCreate();
@@ -65,7 +65,7 @@ public class MessageEntityTest {
 
 	@Test
 	void onCreate_doesNotChangeWhenSet() {
-		var message = new Message();
+		var message = new MessageEntity();
 		var t = LocalDateTime.now().minusDays(5);
 		message.setCreatedAt(t);
 
@@ -76,10 +76,10 @@ public class MessageEntityTest {
 
 	@Test
 	void addRecipient_addsAndLinks() {
-		var message = new Message();
+		var message = new MessageEntity();
 		message.setRecipients(new HashSet<>());
 
-		var recipient = new MessageRecipient();
+		var recipient = new MessageRecipientEntity();
 		message.addRecipient(recipient);
 
 		assertThat(message.getRecipients()).contains(recipient);
@@ -88,7 +88,7 @@ public class MessageEntityTest {
 
 	@Test
 	void addRecipient_null() {
-		var message = new Message();
+		var message = new MessageEntity();
 		message.setRecipients(new HashSet<>());
 
 		message.addRecipient(null);
@@ -98,10 +98,10 @@ public class MessageEntityTest {
 
 	@Test
 	void addRecipient_addedTwice() {
-		var message = new Message();
+		var message = new MessageEntity();
 		message.setRecipients(new HashSet<>());
 
-		var recipient = new MessageRecipient();
+		var recipient = new MessageRecipientEntity();
 
 		message.addRecipient(recipient);
 		message.addRecipient(recipient);

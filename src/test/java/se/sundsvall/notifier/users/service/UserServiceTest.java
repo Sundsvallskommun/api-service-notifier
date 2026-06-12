@@ -16,7 +16,7 @@ import se.sundsvall.notifier.users.integration.db.UserRepository;
 import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Role;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
-import se.sundsvall.notifier.users.service.Mapper.UserMapper;
+import se.sundsvall.notifier.users.service.mapper.UserMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;

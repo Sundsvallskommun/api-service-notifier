@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.messaging.integration.db.repository;
+package se.sundsvall.notifier.messaging.integration.db;
 
 import java.util.List;
 import java.util.Set;
@@ -8,30 +8,30 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
 
 @Repository
-public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+public interface EmployeeRepository extends JpaRepository<EmployeeEntity, Long> {
 
-	List<Employee> findByActiveEmployeeTrue();
+	List<EmployeeEntity> findByActiveEmployeeTrue();
 
-	Page<Employee> findByActiveEmployeeTrue(Pageable pageable);
+	Page<EmployeeEntity> findByActiveEmployeeTrue(Pageable pageable);
 
-	Set<Employee> findAllByIdIn(Set<Long> ids);
+	Set<EmployeeEntity> findAllByIdIn(Set<Long> ids);
 
-	Set<Employee> findAllByIdInAndActiveEmployeeTrue(Set<Long> ids);
+	Set<EmployeeEntity> findAllByIdInAndActiveEmployeeTrue(Set<Long> ids);
 
-	List<Employee> findByOrgId(String orgId);
+	List<EmployeeEntity> findByOrgId(String orgId);
 
-	List<Employee> findByOrgIdAndActiveEmployeeTrue(String orgId);
+	List<EmployeeEntity> findByOrgIdAndActiveEmployeeTrue(String orgId);
 
-	List<Employee> findByOrgIdIn(List<String> orgId);
+	List<EmployeeEntity> findByOrgIdIn(List<String> orgId);
 
-	List<Employee> findByOrgIdInAndActiveEmployeeTrue(List<String> orgId);
+	List<EmployeeEntity> findByOrgIdInAndActiveEmployeeTrue(List<String> orgId);
 
 	@Query("""
 		select e
-		from Employee e
+		from EmployeeEntity e
 		where e.activeEmployee = true
 		    and(
 		        :s2 is null
@@ -48,10 +48,10 @@ public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 		                or e.firstName like concat(:s1,'%') and e.workTitle like concat(:s2,'%')
 		                or e.workTitle like concat(:s1,'%') and e.firstName like concat(:s2,'%')
 		)""")
-	Page<Employee> findMatchingEmployee(@Param("s1") String searchTerm1, @Param("s2") String searchTerm2, Pageable page);
+	Page<EmployeeEntity> findMatchingEmployee(@Param("s1") String searchTerm1, @Param("s2") String searchTerm2, Pageable page);
 
-	List<Employee> findAllByManagerCodeIsNotNull();
+	List<EmployeeEntity> findAllByManagerCodeIsNotNull();
 
-	List<Employee> findAllByManagerCodeIsNotNullAndActiveEmployeeTrue();
+	List<EmployeeEntity> findAllByManagerCodeIsNotNullAndActiveEmployeeTrue();
 
 }

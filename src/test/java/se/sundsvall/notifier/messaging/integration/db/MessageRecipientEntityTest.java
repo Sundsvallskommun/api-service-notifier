@@ -4,9 +4,9 @@ import com.google.code.beanmatchers.BeanMatchers;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
@@ -27,7 +27,7 @@ class MessageRecipientEntityTest {
 
 	@Test
 	void testBean() {
-		org.hamcrest.MatcherAssert.assertThat(MessageRecipient.class, allOf(
+		org.hamcrest.MatcherAssert.assertThat(MessageRecipientEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),
@@ -37,14 +37,14 @@ class MessageRecipientEntityTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var message = new Message();
-		final var employee = new Employee();
+		final var message = new MessageEntity();
+		final var employee = new EmployeeEntity();
 		final var orgId = "orgId";
 		final var workTitle = "workTitle";
 		final var receivedAt = LocalDateTime.now();
-		final var deliveryStatus = MessageRecipient.DeliveryStatus.DELIVERED;
+		final var deliveryStatus = MessageRecipientEntity.DeliveryStatus.DELIVERED;
 
-		final var messageRecipient = MessageRecipient.builder()
+		final var messageRecipient = MessageRecipientEntity.builder()
 			.withOrgId(orgId)
 			.withWorkTitle(workTitle)
 			.withReceivedAt(receivedAt)
@@ -63,7 +63,7 @@ class MessageRecipientEntityTest {
 
 	@Test
 	void onCreate_setsReceivedAtWhenNull() {
-		var recipient = new MessageRecipient();
+		var recipient = new MessageRecipientEntity();
 		recipient.setReceivedAt(null);
 
 		recipient.onCreate();
@@ -73,7 +73,7 @@ class MessageRecipientEntityTest {
 
 	@Test
 	void onCreate_doesNotChangeWhenSet() {
-		var recipient = new MessageRecipient();
+		var recipient = new MessageRecipientEntity();
 		var t = LocalDateTime.now().minusDays(3);
 		recipient.setReceivedAt(t);
 

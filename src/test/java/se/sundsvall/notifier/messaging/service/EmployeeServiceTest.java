@@ -12,8 +12,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeManagerResponse;
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeWithOrgNameResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -35,8 +35,8 @@ public class EmployeeServiceTest {
 	void byOrg_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var employee1 = new Employee();
-		var employee2 = new Employee();
+		var employee1 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 		var response1 = mock(EmployeeWithOrgNameResponse.class);
 		var response2 = mock(EmployeeWithOrgNameResponse.class);
 
@@ -53,8 +53,8 @@ public class EmployeeServiceTest {
 	void byOrgList_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var employee1 = new Employee();
-		var employee2 = new Employee();
+		var employee1 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 		var response1 = mock(EmployeeWithOrgNameResponse.class);
 		var response2 = mock(EmployeeWithOrgNameResponse.class);
 
@@ -71,8 +71,8 @@ public class EmployeeServiceTest {
 	void getAll_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var employee1 = new Employee();
-		var employee2 = new Employee();
+		var employee1 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 		var response1 = mock(EmployeeWithOrgNameResponse.class);
 		var response2 = mock(EmployeeWithOrgNameResponse.class);
 
@@ -99,8 +99,8 @@ public class EmployeeServiceTest {
 	void getWithPartialSearch_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var employee1 = new Employee();
-		var employee2 = new Employee();
+		var employee1 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 		var response1 = mock(EmployeeWithOrgNameResponse.class);
 		var response2 = mock(EmployeeWithOrgNameResponse.class);
 
@@ -108,7 +108,7 @@ public class EmployeeServiceTest {
 			Sort.by(Sort.Order.asc("firstName"), Sort.Order.asc("lastName")));
 		Pageable sortedPage = PageRequest.of(0, 2, Sort.by("firstName").ascending().and(Sort.by("lastName").ascending()));
 
-		Page<Employee> employeePage = new PageImpl<>(List.of(employee1, employee2), sortedPage, 2);
+		Page<EmployeeEntity> employeePage = new PageImpl<>(List.of(employee1, employee2), sortedPage, 2);
 
 		when(employeeRepository.findMatchingEmployee("searchterm1", "serachterm2", sortedPage)).thenReturn(employeePage);
 		when(mapper.mapToEmployeeWithOrgNameResponse(employee1)).thenReturn(response1);
@@ -123,8 +123,8 @@ public class EmployeeServiceTest {
 	void getEmployee_withManagerCode_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var employee1 = new Employee();
-		var employee2 = new Employee();
+		var employee1 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 
 		var response1 = EmployeeManagerResponse.builder()
 			.withId(1L)

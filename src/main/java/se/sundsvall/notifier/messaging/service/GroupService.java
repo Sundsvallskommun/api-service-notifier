@@ -9,9 +9,9 @@ import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.notifier.messaging.api.model.request.GroupRequest;
 import se.sundsvall.notifier.messaging.api.model.request.GroupUpdateRequest;
 import se.sundsvall.notifier.messaging.api.model.response.GroupResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Group;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.GroupRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.GroupRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -32,10 +32,10 @@ public class GroupService {
 	}
 
 	public List<GroupResponse> getAllGroups() {
-		List<Group> groups = groupRepository.findAll();
+		List<GroupEntity> groups = groupRepository.findAll();
 		List<GroupResponse> groupList = new ArrayList<>();
 
-		for (Group group : groups) {
+		for (GroupEntity group : groups) {
 			GroupResponse groupResponse = mapper.mapToGroupResponse(group);
 			groupList.add(groupResponse);
 		}
@@ -44,7 +44,7 @@ public class GroupService {
 
 	public List<GroupResponse> getGroupsByCreatorId(String creatorId) {
 		return groupRepository.findAllByCreatorId(creatorId).stream()
-			.sorted(Comparator.comparing(Group::getId))
+			.sorted(Comparator.comparing(GroupEntity::getId))
 			.map(mapper::mapToGroupResponse)
 			.toList();
 	}
@@ -57,7 +57,7 @@ public class GroupService {
 
 	@Transactional
 	public Long createGroup(GroupRequest request) {
-		var group = Group.builder()
+		var group = GroupEntity.builder()
 			.withName(request.name())
 			.withDescription(request.description())
 			.withCreatorId(request.creatorId())

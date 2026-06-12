@@ -19,12 +19,12 @@ import se.sundsvall.notifier.messaging.api.model.request.MessageRequestWithoutRe
 import se.sundsvall.notifier.messaging.api.model.request.MessageType;
 import se.sundsvall.notifier.messaging.api.model.response.MessageRecipientResponse;
 import se.sundsvall.notifier.messaging.api.model.response.MessageResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Message;
-import se.sundsvall.notifier.messaging.integration.db.entity.MessageRecipient;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.MessageRecipientRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.MessageRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.MessageRecipientRepository;
+import se.sundsvall.notifier.messaging.integration.db.MessageRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.MessageRecipientEntity;
 import se.sundsvall.notifier.messaging.integration.smssender.MessageStatus;
 import se.sundsvall.notifier.messaging.integration.smssender.SmsSenderIntegration;
 import se.sundsvall.notifier.messaging.integration.teamssender.TeamsSenderIntegration;
@@ -75,25 +75,25 @@ class MessageServiceTest {
 			"sender",
 			recipients,
 			MessageType.TEAMS_AND_SMS);
-		MessageRecipient recipient = new MessageRecipient();
+		MessageRecipientEntity recipient = new MessageRecipientEntity();
 
-		var message = Message.builder().withId(1L).build();
+		var message = MessageEntity.builder().withId(1L).build();
 
-		var employee1 = new Employee();
+		var employee1 = new EmployeeEntity();
 		employee1.setId(1L);
-		var employee2 = new Employee();
+		var employee2 = new EmployeeEntity();
 		employee2.setId(2L);
 
 		var employees = List.of(employee1, employee2);
 
 		when(messageMapper.toEntity(any(MessageRequest.class))).thenReturn(message);
-		when(messageRepository.save(any(Message.class))).thenReturn(message);
+		when(messageRepository.save(any(MessageEntity.class))).thenReturn(message);
 		when(employeeRepository.findAllById(recipients)).thenReturn(employees);
 		when(messageMapper.toMessageRecipient(any(), any())).thenReturn(recipient);
 
 		messageService.createMessage(messageRequest);
 
-		verify(messageRepository, times(1)).save(any(Message.class));
+		verify(messageRepository, times(1)).save(any(MessageEntity.class));
 		verify(employeeRepository).findAllById(recipients);
 		verify(messageMapper, times(2)).toMessageRecipient(any(), any());
 	}
@@ -102,7 +102,7 @@ class MessageServiceTest {
 	void getMessageByIdTest() {
 		var messageId = 1L;
 		var email = "test@sundsvall.se";
-		var message = Message.builder().withId(messageId).withSender(email).build();
+		var message = MessageEntity.builder().withId(messageId).withSender(email).build();
 		var response = MessageResponse.builder().withId(messageId).withSender(email).build();
 
 		when(messageRepository.findBySenderAndId(email, messageId)).thenReturn(Optional.of(message));
@@ -131,8 +131,8 @@ class MessageServiceTest {
 	@Test
 	void getMessagesTest() {
 		var sender = "sender";
-		var message1 = Message.builder().withId(1L).build();
-		var message2 = Message.builder().withId(2L).build();
+		var message1 = MessageEntity.builder().withId(1L).build();
+		var message2 = MessageEntity.builder().withId(2L).build();
 		var messages = List.of(message1, message2);
 
 		var response1 = MessageResponse.builder().withId(1L).build();
@@ -152,7 +152,7 @@ class MessageServiceTest {
 
 	@Test
 	void sendMessageTest() {
-		Employee employee = new Employee();
+		EmployeeEntity employee = new EmployeeEntity();
 		employee.setEmail("test@example.com");
 		employee.setWorkMobile("+46701234567");
 		MessageType messageStatus = MessageType.TEAMS_AND_SMS;
@@ -167,7 +167,7 @@ class MessageServiceTest {
 
 		var result = messageService.sendMessageToEmployee(employee, messageStatus, content);
 
-		assertThat(result).isEqualTo(MessageRecipient.DeliveryStatus.DELIVERED);
+		assertThat(result).isEqualTo(MessageRecipientEntity.DeliveryStatus.DELIVERED);
 		verify(smsSenderIntegration).sendSms(anyString(), any());
 		verify(phoneNumberUtil).cleanPhoneNumber(anyString());
 		verify(teamsSenderIntegration).sendTeamsMessage(anyString(), any());
@@ -175,11 +175,11 @@ class MessageServiceTest {
 
 	@Test
 	void sendMessageToAll_shouldProcessAllEmployeesAcrossPages() {
-		Employee employee1 = new Employee();
+		EmployeeEntity employee1 = new EmployeeEntity();
 		employee1.setEmail("test1@example.com");
 		employee1.setWorkMobile("+46701234567");
 
-		Employee employee2 = new Employee();
+		EmployeeEntity employee2 = new EmployeeEntity();
 		employee2.setEmail("test2@example.com");
 		employee2.setWorkMobile("+46707654321");
 
@@ -189,22 +189,22 @@ class MessageServiceTest {
 			"sender",
 			MessageType.TEAMS_AND_SMS);
 
-		var savedMessage = Message.builder()
+		var savedMessage = MessageEntity.builder()
 			.withTitle("title")
 			.withContent("content")
 			.withSender("sender")
 			.withMessageType(MessageType.TEAMS_AND_SMS)
 			.build();
 
-		var recipient1 = new MessageRecipient();
-		var recipient2 = new MessageRecipient();
+		var recipient1 = new MessageRecipientEntity();
+		var recipient2 = new MessageRecipientEntity();
 
-		Page<Employee> firstPage = new PageImpl<>(
+		Page<EmployeeEntity> firstPage = new PageImpl<>(
 			List.of(employee1),
 			PageRequest.of(0, 200),
 			201);
 
-		Page<Employee> secondPage = new PageImpl<>(
+		Page<EmployeeEntity> secondPage = new PageImpl<>(
 			List.of(employee2),
 			PageRequest.of(1, 200),
 			201);
@@ -213,12 +213,12 @@ class MessageServiceTest {
 			.thenReturn(firstPage);
 		when(employeeRepository.findByActiveEmployeeTrue(PageRequest.of(1, 200)))
 			.thenReturn(secondPage);
-		when(messageRepository.save(any(Message.class)))
+		when(messageRepository.save(any(MessageEntity.class)))
 			.thenReturn(savedMessage);
 
-		when(messageMapper.toMessageRecipient(employee1, MessageRecipient.DeliveryStatus.DELIVERED))
+		when(messageMapper.toMessageRecipient(employee1, MessageRecipientEntity.DeliveryStatus.DELIVERED))
 			.thenReturn(recipient1);
-		when(messageMapper.toMessageRecipient(employee2, MessageRecipient.DeliveryStatus.DELIVERED))
+		when(messageMapper.toMessageRecipient(employee2, MessageRecipientEntity.DeliveryStatus.DELIVERED))
 			.thenReturn(recipient2);
 		when(phoneNumberUtil.cleanPhoneNumber(anyString()))
 			.thenAnswer(invocation -> invocation.getArgument(0));
@@ -229,7 +229,7 @@ class MessageServiceTest {
 
 		messageService.sendMessageToAll(messageRequest);
 
-		verify(messageRepository).save(any(Message.class));
+		verify(messageRepository).save(any(MessageEntity.class));
 		verify(employeeRepository).findByActiveEmployeeTrue(PageRequest.of(0, 200));
 		verify(employeeRepository).findByActiveEmployeeTrue(PageRequest.of(1, 200));
 
@@ -237,8 +237,8 @@ class MessageServiceTest {
 		verify(smsSenderIntegration, times(2)).sendSms(anyString(), any());
 		verify(phoneNumberUtil, times(2)).cleanPhoneNumber(anyString());
 
-		verify(messageMapper).toMessageRecipient(employee1, MessageRecipient.DeliveryStatus.DELIVERED);
-		verify(messageMapper).toMessageRecipient(employee2, MessageRecipient.DeliveryStatus.DELIVERED);
+		verify(messageMapper).toMessageRecipient(employee1, MessageRecipientEntity.DeliveryStatus.DELIVERED);
+		verify(messageMapper).toMessageRecipient(employee2, MessageRecipientEntity.DeliveryStatus.DELIVERED);
 		verify(messageRecipientRepository).save(recipient1);
 		verify(messageRecipientRepository).save(recipient2);
 
@@ -252,9 +252,9 @@ class MessageServiceTest {
 		Long messageId = 1L;
 		Pageable pageable = PageRequest.of(0, 2);
 
-		MessageRecipient entity = new MessageRecipient();
+		MessageRecipientEntity entity = new MessageRecipientEntity();
 		MessageRecipientResponse response = mock(MessageRecipientResponse.class);
-		Page<MessageRecipient> entityPage = new PageImpl<>(List.of(entity));
+		Page<MessageRecipientEntity> entityPage = new PageImpl<>(List.of(entity));
 
 		when(messageRecipientRepository.findByMessageId(messageId, pageable))
 			.thenReturn(entityPage);

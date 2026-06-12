@@ -1,10 +1,10 @@
 package se.sundsvall.notifier.users.service;
 
-import jakarta.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import se.sundsvall.dept44.problem.*;
 import se.sundsvall.notifier.users.api.model.UpdateUserRequest;
 import se.sundsvall.notifier.users.api.model.UserRequest;
@@ -12,7 +12,7 @@ import se.sundsvall.notifier.users.api.model.UserResponse;
 import se.sundsvall.notifier.users.integration.db.UserRepository;
 import se.sundsvall.notifier.users.integration.db.model.enums.Role;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
-import se.sundsvall.notifier.users.service.Mapper.UserMapper;
+import se.sundsvall.notifier.users.service.mapper.UserMapper;
 
 import static java.lang.String.format;
 import static org.springframework.http.HttpStatus.CONFLICT;

@@ -8,9 +8,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.notifier.messaging.api.model.response.OrganizationResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
-import se.sundsvall.notifier.messaging.integration.db.repository.EmployeeRepository;
-import se.sundsvall.notifier.messaging.integration.db.repository.OrganizationRepository;
+import se.sundsvall.notifier.messaging.integration.db.EmployeeRepository;
+import se.sundsvall.notifier.messaging.integration.db.OrganizationRepository;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.springframework.http.HttpStatus.NOT_FOUND;
@@ -76,30 +76,30 @@ public class OrganizationService {
 
 	public Page<OrganizationResponse> getOrganizationWithSearch(String search, Pageable pageable) {
 		String searchLowercase = search.trim().toLowerCase();
-		Page<Organization> searchResult = organizationRepository.findByNameContaining(searchLowercase, pageable);
+		Page<OrganizationEntity> searchResult = organizationRepository.findByNameContaining(searchLowercase, pageable);
 		return searchResult.map(mapper::mapToOrganizationResponse);
 	}
 
 	public List<OrganizationResponse> getChildrenReplaceDuplicateDescendantsWithRoot(String orgId) {
-		List<Organization> directChildren = organizationRepository.findChildren(orgId);
+		List<OrganizationEntity> directChildren = organizationRepository.findChildren(orgId);
 
 		if (directChildren.isEmpty()) {
 			throw Problem.valueOf(NOT_FOUND, "No children for organization with id '%s' could be found".formatted(orgId));
 		}
 
 		List<OrganizationResponse> response = new ArrayList<>();
-		for (Organization topChild : directChildren) {
+		for (OrganizationEntity topChild : directChildren) {
 			if (topChild.getChildren().stream().noneMatch(child -> child.getName().equals(topChild.getName()))) {
 				response.add(mapper.mapToOrganizationResponse(topChild));
 				continue;
 			}
-			Organization triggeredNode = findLastDuplicateBeforeBranch(topChild);
+			OrganizationEntity triggeredNode = findLastDuplicateBeforeBranch(topChild);
 
-			List<Organization> resolvedChildren = organizationRepository.findChildren(triggeredNode.getOrgId());
+			List<OrganizationEntity> resolvedChildren = organizationRepository.findChildren(triggeredNode.getOrgId());
 			if (resolvedChildren.isEmpty()) {
 				response.add(mapper.mapToOrganizationResponse(triggeredNode));
 			} else {
-				for (Organization child : resolvedChildren) {
+				for (OrganizationEntity child : resolvedChildren) {
 					if (!child.getChildren().isEmpty() || !employeeRepository.findByOrgId(child.getOrgId()).isEmpty()) {
 						response.add(mapper.mapToOrganizationResponse(child));
 					}
@@ -109,11 +109,11 @@ public class OrganizationService {
 		return response;
 	}
 
-	private Organization findLastDuplicateBeforeBranch(Organization start) {
+	private OrganizationEntity findLastDuplicateBeforeBranch(OrganizationEntity start) {
 		String firstOrg = start.getName();
-		Organization current = start;
+		OrganizationEntity current = start;
 		while (Objects.equals(firstOrg, current.getName())) {
-			List<Organization> children = organizationRepository.findChildren(current.getOrgId());
+			List<OrganizationEntity> children = organizationRepository.findChildren(current.getOrgId());
 
 			if (children.isEmpty()) {
 				return current;

@@ -4,7 +4,7 @@ import com.google.code.beanmatchers.BeanMatchers;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.integration.db.entity.Group;
+import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
@@ -25,7 +25,7 @@ public class GroupEntityTest {
 
 	@Test
 	void testBean() {
-		org.hamcrest.MatcherAssert.assertThat(Group.class, allOf(
+		org.hamcrest.MatcherAssert.assertThat(GroupEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),
@@ -35,7 +35,7 @@ public class GroupEntityTest {
 
 	@Test
 	void onCreate_setsCreatedAt_setsUpdatedAt_whenNull() {
-		var group = new Group();
+		var group = new GroupEntity();
 		group.setCreatedAt(null);
 		group.setUpdatedAt(null);
 
@@ -47,7 +47,7 @@ public class GroupEntityTest {
 
 	@Test
 	void onUpdate_updatesUpdatedAt() {
-		var group = new Group();
+		var group = new GroupEntity();
 		var oldUpdated = LocalDateTime.now().minusDays(1);
 		group.setUpdatedAt(oldUpdated);
 

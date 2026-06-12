@@ -10,17 +10,17 @@ import se.sundsvall.notifier.messaging.api.model.response.EmployeeManagerRespons
 import se.sundsvall.notifier.messaging.api.model.response.EmployeeWithOrgNameResponse;
 import se.sundsvall.notifier.messaging.api.model.response.GroupResponse;
 import se.sundsvall.notifier.messaging.api.model.response.OrganizationResponse;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
-import se.sundsvall.notifier.messaging.integration.db.entity.Group;
-import se.sundsvall.notifier.messaging.integration.db.entity.Organization;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
+import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 
 @Component
 @NoArgsConstructor
 public class EntityToResponseMapper {
 
-	public GroupResponse mapToGroupResponse(Group group) {
+	public GroupResponse mapToGroupResponse(GroupEntity group) {
 		Set<EmployeeWithOrgNameResponse> response = group.getEmployees().stream()
-			.sorted(Comparator.comparing(Employee::getId))
+			.sorted(Comparator.comparing(EmployeeEntity::getId))
 			.map(this::mapToEmployeeWithOrgNameResponse)
 			.collect(Collectors.toCollection(LinkedHashSet::new));
 
@@ -35,7 +35,7 @@ public class EntityToResponseMapper {
 
 	}
 
-	public EmployeeManagerResponse mapToEmployeeManagerResponse(Employee employee) {
+	public EmployeeManagerResponse mapToEmployeeManagerResponse(EmployeeEntity employee) {
 		return EmployeeManagerResponse.builder()
 			.withId(employee.getId())
 			.withPersonId(employee.getPersonId())
@@ -50,7 +50,7 @@ public class EntityToResponseMapper {
 			.build();
 	}
 
-	public EmployeeWithOrgNameResponse mapToEmployeeWithOrgNameResponse(Employee employee) {
+	public EmployeeWithOrgNameResponse mapToEmployeeWithOrgNameResponse(EmployeeEntity employee) {
 		var orgName = employee.getOrganization().getName();
 		return EmployeeWithOrgNameResponse.builder()
 			.withId(employee.getId())
@@ -66,7 +66,7 @@ public class EntityToResponseMapper {
 			.build();
 	}
 
-	public OrganizationResponse mapToOrganizationResponse(Organization organization) {
+	public OrganizationResponse mapToOrganizationResponse(OrganizationEntity organization) {
 		return OrganizationResponse.builder()
 			.withCompanyId(organization.getCompanyId())
 			.withParentOrgId(organization.getParentOrgId())

@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.messaging.integration.db.entity;
+package se.sundsvall.notifier.messaging.integration.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -23,14 +23,14 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity
 @Table(name = "organization")
-public class Organization {
+public class OrganizationEntity {
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "parent_org_id", referencedColumnName = "org_id", insertable = false, updatable = false)
-	private Organization parent;
+	private OrganizationEntity parent;
 
 	@OneToMany(mappedBy = "parent", fetch = FetchType.LAZY)
-	private Set<Organization> children = new HashSet<>();
+	private Set<OrganizationEntity> children = new HashSet<>();
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,7 +62,7 @@ public class Organization {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof Organization that))
+		if (!(o instanceof OrganizationEntity that))
 			return false;
 		return id != null && Objects.equals(id, that.id);
 	}
@@ -74,7 +74,7 @@ public class Organization {
 
 	@Override
 	public String toString() {
-		return "Organization{" +
+		return "OrganizationEntity{" +
 			"id=" + id +
 			", companyId='" + companyId + '\'' +
 			", parentOrgId='" + parentOrgId + '\'' +

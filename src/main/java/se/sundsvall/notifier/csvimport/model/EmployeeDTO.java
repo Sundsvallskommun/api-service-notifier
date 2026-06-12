@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.csvimport.db.dto;
+package se.sundsvall.notifier.csvimport.model;
 
 public class EmployeeDTO {
 	public String PersonId;

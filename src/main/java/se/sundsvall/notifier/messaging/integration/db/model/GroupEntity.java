@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.messaging.integration.db.entity;
+package se.sundsvall.notifier.messaging.integration.db.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,7 +29,7 @@ import lombok.Setter;
 @Builder(setterPrefix = "with")
 @Entity
 @Table(name = "user_group")
-public class Group {
+public class GroupEntity {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -51,7 +51,7 @@ public class Group {
 		name = "employee_user_group",
 		joinColumns = @JoinColumn(name = "group_id"),
 		inverseJoinColumns = @JoinColumn(name = "employee_id"))
-	private Set<Employee> employees = new HashSet<>();
+	private Set<EmployeeEntity> employees = new HashSet<>();
 
 	@Column(name = "created_at", nullable = false, updatable = false)
 	private LocalDateTime createdAt;
@@ -78,7 +78,7 @@ public class Group {
 	public boolean equals(Object o) {
 		if (this == o)
 			return true;
-		if (!(o instanceof Group group))
+		if (!(o instanceof GroupEntity group))
 			return false;
 		return id != null && Objects.equals(id, group.id);
 	}
@@ -90,7 +90,7 @@ public class Group {
 
 	@Override
 	public String toString() {
-		return "Group{" +
+		return "GroupEntity{" +
 			"name='" + name + '\'' +
 			", id=" + id +
 			", description='" + description + '\'' +

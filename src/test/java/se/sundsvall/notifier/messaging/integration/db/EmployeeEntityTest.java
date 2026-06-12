@@ -4,7 +4,7 @@ import com.google.code.beanmatchers.BeanMatchers;
 import java.time.LocalDateTime;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.integration.db.entity.Employee;
+import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
@@ -25,7 +25,7 @@ class EmployeeEntityTest {
 
 	@Test
 	void testBean() {
-		assertThat(Employee.class, allOf(
+		assertThat(EmployeeEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),
