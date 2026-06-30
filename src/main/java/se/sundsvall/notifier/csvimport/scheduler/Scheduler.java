@@ -36,11 +36,21 @@ public class Scheduler {
 		this.fileManager = fileManager;
 	}
 
+	/**
+	 * Single scheduled entry point. Organizations are imported before employees because employee
+	 * org-resolution reads the {@code organization} table — a separate, racing emp job could otherwise
+	 * remap real employees to the UNKNOWN org. One ShedLock makes the two steps atomic; if the org step
+	 * throws (including a failed SFTP download), the emp step is skipped and the cycle retries next run.
+	 */
 	@Dept44Scheduled(
-		cron = "${scheduler.scheduled-org-import.cron}",
-		name = "${scheduler.scheduled-org-import.name}",
-		lockAtMostFor = "${scheduler.scheduled-org-import.shedlock-lock-at-most-for}",
-		maximumExecutionTime = "${scheduler.scheduled-org-import.maximum-execution-time}")
+		cron = "${scheduler.directory-import.cron}",
+		name = "${scheduler.directory-import.name}",
+		lockAtMostFor = "${scheduler.directory-import.shedlock-lock-at-most-for}",
+		maximumExecutionTime = "${scheduler.directory-import.maximum-execution-time}")
+	public void importDirectoryJob() {
+		importOrganizationsJob();
+		importEmployeesJob();
+	}
 
 	public void importOrganizationsJob() {
 
@@ -57,12 +67,6 @@ public class Scheduler {
 			throw new RuntimeException("[ORG] Import failed", e);
 		}
 	}
-
-	@Dept44Scheduled(
-		cron = "${scheduler.scheduled-emp-import.cron}",
-		name = "${scheduler.scheduled-emp-import.name}",
-		lockAtMostFor = "${scheduler.scheduled-emp-import.shedlock-lock-at-most-for}",
-		maximumExecutionTime = "${scheduler.scheduled-emp-import.maximum-execution-time}")
 
 	public void importEmployeesJob() {
 

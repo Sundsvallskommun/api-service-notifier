@@ -36,8 +36,8 @@ class StartupRunner {
 	@Async
 	@EventListener(ApplicationReadyEvent.class)
 	void runInitialImport() {
-		runSafely("[ORG]", scheduler::importOrganizationsJob);
-		runSafely("[EMP]", scheduler::importEmployeesJob);
+		// Single ordered job: org-then-emp, fail-fast (emp skipped if org fails). Mirrors the scheduled path.
+		runSafely("[DIRECTORY]", scheduler::importDirectoryJob);
 	}
 
 	private void runSafely(String label, Runnable job) {

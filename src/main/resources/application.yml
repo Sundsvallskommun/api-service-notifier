@@ -88,14 +88,10 @@ import:
   employee-batch-size: ${EMPLOYEE_BATCH_SIZE:500}
   organization-batch-size: ${ORGANIZATION_BATCH_SIZE:500}
 
+# One ordered job (org-then-emp) under a single lock — see Scheduler.importDirectoryJob.
 scheduler:
-  scheduled-org-import:
+  directory-import:
     cron: "0 0 * * * *"
-    name: "org-import"
-    shedlock-lock-at-most-for: "PT2H"
-    maximum-execution-time: "PT2H"
-  scheduled-emp-import:
-    cron: "0 0 * * * *"
-    name: "emp-import"
+    name: "directory-import"
     shedlock-lock-at-most-for: "PT2H"
     maximum-execution-time: "PT2H"
