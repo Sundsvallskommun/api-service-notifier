@@ -14,7 +14,6 @@ import se.sundsvall.notifier.users.integration.db.UserRepository;
 import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Role;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
-import se.sundsvall.notifier.users.service.UserService;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,9 +30,6 @@ class DataInitializerTest {
 
 	@Mock
 	private UserRepository userRepository;
-
-	@Mock
-	private UserService userService;
 
 	@Mock
 	private PasswordEncoder passwordEncoder;

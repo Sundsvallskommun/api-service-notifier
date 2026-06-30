@@ -2,6 +2,7 @@ package se.sundsvall.notifier.csvimport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -21,6 +22,7 @@ import se.sundsvall.notifier.csvimport.scheduler.Scheduler;
  */
 @ExcludeFromJacocoGeneratedCoverageReport
 @Component
+@ConditionalOnProperty(name = "import.enabled", havingValue = "true")
 class StartupRunner {
 
 	private static final Logger LOG = LoggerFactory.getLogger(StartupRunner.class);

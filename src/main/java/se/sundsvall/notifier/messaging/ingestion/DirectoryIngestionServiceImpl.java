@@ -53,6 +53,15 @@ class DirectoryIngestionServiceImpl implements DirectoryIngestionService {
 		  AND (updated_at IS NULL OR updated_at < ?)
 		""";
 
+	// Synthetic fallback organization for employees whose org_id is missing/unknown at import time.
+	// PARENT_ID="13" must already exist as an org_id (top-level node from the organization import) or
+	// the fk_org_parent FK insert fails — keep these aligned with the source directory's org tree.
+	private static final String UNKNOWN_ORG_COMPANY_ID = "1";
+	private static final String UNKNOWN_ORG_ID = "UNKNOWN";
+	private static final String UNKNOWN_ORG_NAME = "Övriga personer";
+	private static final String UNKNOWN_ORG_PARENT_ID = "13";
+	private static final int UNKNOWN_ORG_TREE_LEVEL = 2;
+
 	private final JdbcTemplate jdbcTemplate;
 
 	DirectoryIngestionServiceImpl(JdbcTemplate jdbcTemplate) {
@@ -77,7 +86,7 @@ class DirectoryIngestionServiceImpl implements DirectoryIngestionService {
 	public void ensureUnknownOrganization() {
 		final var unknownOrganization = new ArrayList<Object[]>(1);
 		unknownOrganization.add(new Object[] {
-			1, "UNKNOWN", "Övriga personer", 13, 2
+			UNKNOWN_ORG_COMPANY_ID, UNKNOWN_ORG_ID, UNKNOWN_ORG_NAME, UNKNOWN_ORG_PARENT_ID, UNKNOWN_ORG_TREE_LEVEL
 		});
 		jdbcTemplate.batchUpdate(ORGANIZATION_UPSERT, unknownOrganization);
 		LOG.info("[ORG] ensured UNKNOWN fallback organization");

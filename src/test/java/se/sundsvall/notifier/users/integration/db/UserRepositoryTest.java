@@ -37,7 +37,8 @@ class UserRepositoryTest {
 			.withEmail("Test@testmail.com")
 			.withPhoneNumber("0701740679")
 			.withMunicipalityId("2281")
-			.withStatus(Status.INACTIVE);
+			.withStatus(Status.INACTIVE)
+			.withPassword("$2a$10$nsmcrgNIVycw.1acUPPmJesm6lU7tdEhU6vlkDZDoGs31/cMI61hG");
 
 		final var savedEntity = userRepository.save(userEntity);
 		final var parsedEntity = userRepository.findByEmail(savedEntity.getEmail());
@@ -56,7 +57,8 @@ class UserRepositoryTest {
 			.withId(1L)
 			.withEmail(MAIL_ADRESS_1).withPhoneNumber(PHONE_NUMBER_1)
 			.withMunicipalityId(MUNICIPALITY_ID_1)
-			.withStatus(STATUS_1);
+			.withStatus(STATUS_1)
+			.withPassword("$2a$10$nsmcrgNIVycw.1acUPPmJesm6lU7tdEhU6vlkDZDoGs31/cMI61hG");
 
 		final var savedEntity = userRepository.save(userEntity);
 		assertThat(savedEntity.getEmail()).isEqualTo(MAIL_ADRESS_1);

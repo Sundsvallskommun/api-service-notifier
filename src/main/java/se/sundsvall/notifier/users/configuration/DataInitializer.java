@@ -9,7 +9,6 @@ import se.sundsvall.notifier.users.integration.db.UserRepository;
 import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Role;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
-import se.sundsvall.notifier.users.service.UserService;
 
 @Component
 @Profile("!(junit | it)")
@@ -24,17 +23,18 @@ public class DataInitializer implements CommandLineRunner {
 	String municipalityId;
 
 	UserRepository userRepository;
-	UserService userService;
 	PasswordEncoder passwordEncoder;
 
-	public DataInitializer(UserRepository userRepository, UserService userService, PasswordEncoder passwordEncoder) {
+	public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
-		this.userService = userService;
 		this.passwordEncoder = passwordEncoder;
 	}
 
 	@Override
 	public void run(String... args) {
+		// Bootstrap/repair the configured admin on every boot: create it if absent, otherwise force the
+		// ADMIN role. This is a deliberate standing-privilege path — the account named by
+		// user.credentials.email is guaranteed admin after each restart.
 		var existing = userRepository.findByEmail(email);
 		if (existing.isEmpty()) {
 			userRepository.save(UserEntity.create()

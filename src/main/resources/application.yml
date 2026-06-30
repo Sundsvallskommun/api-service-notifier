@@ -84,9 +84,9 @@ import:
   # Expected file names
   org-file-name: ${ORGANIZATION_FILE_NAME}
   emp-file-name: ${EMPLOYEE_FILE_NAME}
-  # Batch size
-  employee-batch-size: ${EMPLOYEE_BATCH_SIZE}
-  organization-batch-size: ${ORGANIZATION_BATCH_SIZE}
+  # Batch size (override per environment; defaults are sane for typical directory sizes)
+  employee-batch-size: ${EMPLOYEE_BATCH_SIZE:500}
+  organization-batch-size: ${ORGANIZATION_BATCH_SIZE:500}
 
 scheduler:
   scheduled-org-import:

@@ -2,6 +2,7 @@ package se.sundsvall.notifier.csvimport.scheduler;
 
 import java.nio.file.Path;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import se.sundsvall.dept44.scheduling.Dept44Scheduled;
@@ -11,6 +12,7 @@ import se.sundsvall.notifier.csvimport.service.OrganizationImportService;
 
 @EnableScheduling
 @Configuration
+@ConditionalOnProperty(name = "import.enabled", havingValue = "true")
 public class Scheduler {
 
 	@Value("${import.incoming-dir}")

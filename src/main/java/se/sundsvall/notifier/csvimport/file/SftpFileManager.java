@@ -49,7 +49,10 @@ public class SftpFileManager extends AbstractFileManager {
 			log.info("File '{}' downloaded", fileName);
 
 		} catch (FileSystemException e) {
-			log.info("Error downloading file", e);
+			// Abort the import loudly: a swallowed download failure would let the job proceed on a
+			// previously-downloaded (stale) file and silently re-import outdated recipients. Throwing
+			// fails the @Dept44Scheduled run so the failure surfaces in monitoring.
+			throw new IllegalStateException("Failed to download file '" + fileName + "' from SFTP", e);
 		} finally {
 			if (local != null) {
 				try {

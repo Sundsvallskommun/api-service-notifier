@@ -9,6 +9,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -25,7 +26,7 @@ class SftpFileManagerTest {
 	Path tempDir;
 
 	@Test
-	void downloadFileTest() {
+	void downloadFileFailureThrows() {
 		Path incomingDir = tempDir.resolve("incoming");
 		String fileName = "file.csv";
 
@@ -35,7 +36,9 @@ class SftpFileManagerTest {
 		when(sftpProperties.connectTimeout()).thenReturn(Duration.ofSeconds(15));
 		when(sftpProperties.sessionTimeout()).thenReturn(Duration.ofSeconds(15));
 
-		sftpFileManager.downloadFile(incomingDir, fileName);
+		// The bogus host cannot be reached, so the download must fail loudly rather than be swallowed.
+		assertThatThrownBy(() -> sftpFileManager.downloadFile(incomingDir, fileName))
+			.isInstanceOf(IllegalStateException.class);
 
 		verify(sftpProperties).username();
 		verify(sftpProperties).password();
