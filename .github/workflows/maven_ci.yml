@@ -1,4 +1,4 @@
-name: "Call Java CI with Maven"
+name: Call Java CI with Maven
 
 permissions:
   contents: read
