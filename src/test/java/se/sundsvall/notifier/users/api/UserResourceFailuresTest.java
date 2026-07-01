@@ -74,7 +74,7 @@ class UserResourceFailuresTest {
 			.extracting(Violation::field, Violation::message)
 			.containsExactlyInAnyOrder(
 				tuple("email", "must be a valid Email-adress"),
-				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
+				tuple("status", "must be one of: [ACTIVE, INACTIVE, SUSPENDED] (case-insensitive)"),
 				tuple("phoneNumber", "must be a valid mobile number"),
 				tuple("password", "must not be blank"),
 				tuple("municipalityName", "must be a valid municipality name"));
@@ -132,9 +132,9 @@ class UserResourceFailuresTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
 			.containsExactlyInAnyOrder(
-				tuple("status", "must be ACTIVE, INACTIVE or SUSPENDED"),
+				tuple("status", "must be one of: [ACTIVE, INACTIVE, SUSPENDED] (case-insensitive)"),
 				tuple("phoneNumber", "must be a valid mobile number"),
 				tuple("municipalityName", "must be a valid municipality name"),
-				tuple("role", "must be USER or ADMIN"));
+				tuple("role", "must be one of: [ADMIN, USER] (case-insensitive)"));
 	}
 }

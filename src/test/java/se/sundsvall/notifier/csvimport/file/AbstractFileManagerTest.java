@@ -7,7 +7,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class AbstractFileManagerTest {
 
@@ -39,9 +41,9 @@ class AbstractFileManagerTest {
 		fileManager.moveFile(orgCsv, targetDir);
 
 		Path moved = targetDir.resolve("OrgExport.csv");
-		assertTrue(Files.exists(moved));
-		assertFalse(Files.exists(orgCsv));
-		assertEquals(content, Files.readString(moved));
+		assertThat(moved).exists();
+		assertThat(orgCsv).doesNotExist();
+		assertThat(moved).hasContent(content);
 	}
 
 	@Test
@@ -58,9 +60,9 @@ class AbstractFileManagerTest {
 		fileManager.moveFile(empCsv, targetDir);
 
 		Path moved = targetDir.resolve("EmpExport.csv");
-		assertTrue(Files.exists(moved));
-		assertFalse(Files.exists(empCsv));
-		assertEquals(content, Files.readString(moved));
+		assertThat(moved).exists();
+		assertThat(empCsv).doesNotExist();
+		assertThat(moved).hasContent(content);
 	}
 
 	@Test
@@ -74,18 +76,19 @@ class AbstractFileManagerTest {
 		Path processedDir = tempDir.resolve("processed");
 		Files.writeString(processedDir, "file");
 
-		assertThrows(IllegalStateException.class, () -> fileManager.moveFile(filePath, processedDir));
+		assertThatThrownBy(() -> fileManager.moveFile(filePath, processedDir))
+			.isInstanceOf(IllegalStateException.class);
 	}
 
 	@Test
 	void testDeletePreviouslyProcessedFile() throws IOException {
 		Path processed = tempDir.resolve("processed.csv");
 		Files.writeString(processed, "string");
-		assertTrue(Files.exists(processed));
+		assertThat(processed).exists();
 
 		fileManager.deletePreviouslyProcessedFile(processed);
 
-		assertFalse(Files.exists(processed));
+		assertThat(processed).doesNotExist();
 	}
 
 	@Test
@@ -94,21 +97,18 @@ class AbstractFileManagerTest {
 		Files.createDirectory(dir);
 		Files.writeString(dir.resolve("file.txt"), "test");
 
-		IllegalStateException ex = assertThrows(
-			IllegalStateException.class,
-			() -> fileManager.deletePreviouslyProcessedFile(dir));
-
-		assertEquals("Failed to delete file", ex.getMessage());
+		assertThatThrownBy(() -> fileManager.deletePreviouslyProcessedFile(dir))
+			.isInstanceOf(IllegalStateException.class)
+			.hasMessage("Failed to delete file");
 	}
 
 	@Test
 	void verifyReadableWhenNoFileTest() {
 		Path missingFile = tempDir.resolve("missing.csv");
 
-		IllegalStateException exception = assertThrows(
-			IllegalStateException.class, () -> fileManager.verifyReadable(missingFile, "ORG"));
-
-		assertTrue(exception.getMessage().startsWith("File does not exist:"));
+		assertThatThrownBy(() -> fileManager.verifyReadable(missingFile, "ORG"))
+			.isInstanceOf(IllegalStateException.class)
+			.hasMessageStartingWith("File does not exist:");
 	}
 
 	@Test
@@ -116,7 +116,7 @@ class AbstractFileManagerTest {
 		Path file = tempDir.resolve("OrgExport.csv");
 		Files.writeString(file, "string");
 
-		assertDoesNotThrow(() -> fileManager.verifyReadable(file, "ORG"));
+		assertThatCode(() -> fileManager.verifyReadable(file, "ORG")).doesNotThrowAnyException();
 	}
 
 	@Test
@@ -124,9 +124,8 @@ class AbstractFileManagerTest {
 		Path directory = tempDir.resolve("directory");
 		Files.createDirectory(directory);
 
-		IllegalStateException exception = assertThrows(
-			IllegalStateException.class, () -> fileManager.verifyReadable(directory, "ORG"));
-
-		assertTrue(exception.getMessage().startsWith("Failed reading file:"));
+		assertThatThrownBy(() -> fileManager.verifyReadable(directory, "ORG"))
+			.isInstanceOf(IllegalStateException.class)
+			.hasMessageStartingWith("Failed reading file:");
 	}
 }

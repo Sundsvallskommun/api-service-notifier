@@ -101,21 +101,27 @@ public class UserResponse {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(municipalityName, email, phoneNumber, status);
+	public boolean equals(Object o) {
+		if (!(o instanceof final UserResponse that))
+			return false;
+		return Objects.equals(id, that.id) && Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber) && Objects.equals(municipalityName, that.municipalityName) && Objects.equals(status, that.status) && Objects.equals(role,
+			that.role);
 	}
 
 	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		UserResponse that = (UserResponse) o;
-		return Objects.equals(email, that.email) && Objects.equals(phoneNumber, that.phoneNumber)
-			&& Objects.equals(status, that.status) && Objects.equals(municipalityName, that.municipalityName);
+	public int hashCode() {
+		return Objects.hash(id, email, phoneNumber, municipalityName, status, role);
+	}
 
+	@Override
+	public String toString() {
+		return "UserResponse{" +
+			"id=" + id +
+			", email='" + email + '\'' +
+			", phoneNumber='" + phoneNumber + '\'' +
+			", municipalityName='" + municipalityName + '\'' +
+			", status='" + status + '\'' +
+			", role='" + role + '\'' +
+			'}';
 	}
 }

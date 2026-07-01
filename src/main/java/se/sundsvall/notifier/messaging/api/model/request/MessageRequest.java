@@ -17,5 +17,6 @@ public record MessageRequest(
 	@Schema(description = "Vilken användare som skickat meddelandet", example = "kalle.kula@sundsvall.se") @NotBlank String sender,
 
 	@Schema(description = "Lista på mottagare id", example = "[1, 2, 3]") @NotEmpty(message = "recipientEmployeeIds must contain at least one id") Set<Long> recipientEmployeeIds,
+
 	@Schema(description = "Kan var SMS, TEAMS eller TEAMS_AND_SMS", example = "SMS") @NotNull MessageType messageType) {
 }

@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.apptest;
+package apptest;
 
 
 import org.junit.jupiter.api.Test;
@@ -32,11 +32,9 @@ class DeleteUserIT extends AbstractAppTest {
 
     @Test
     void test01_deleteUserByEmail() {
-
         final String email = "testmail1@sundsvall.se";
-
         assertThat(userRepository.findByEmail(email)).isPresent();
-
+		
         setupCall()
                 .withServicePath("/api/users/emails/".concat(email))
                 .withHttpMethod(HttpMethod.DELETE)
@@ -44,16 +42,13 @@ class DeleteUserIT extends AbstractAppTest {
                 .sendRequestAndVerifyResponse();
 
         assertThat(userRepository.findByEmail(email)).isEmpty();
-
     }
 
     @Test
     void test02_deleteUserId() {
-
         final Long id = 1L;
-
         assertThat(userRepository.findById(id)).isPresent();
-
+		
         setupCall()
                 .withServicePath("/api/users/ids/" + id)
                 .withHttpMethod(HttpMethod.DELETE)
@@ -61,7 +56,5 @@ class DeleteUserIT extends AbstractAppTest {
                 .sendRequestAndVerifyResponse();
 
         assertThat(userRepository.findById(id)).isEmpty();
-
-
     }
 }

@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.apptest;
+package apptest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,33 +22,25 @@ class GetUserIT extends AbstractAppTest {
 
     @Test
     void test01_getUserByEmail() {
-
         final String email = "testmail1@sundsvall.se";
-
-
+		
         setupCall()
                 .withServicePath("/api/users/emails/".concat(email))
                 .withHttpMethod(HttpMethod.GET)
                 .withExpectedResponseStatus(HttpStatus.OK)
                 .withExpectedResponse(RESPONSE)
                 .sendRequestAndVerifyResponse();
-
-
     }
 
     @Test
     void test02_getUserById() {
-
         final Long id = 1L;
-
-
+		
         setupCall()
                 .withServicePath("/api/users/ids/" + id)
                 .withHttpMethod(HttpMethod.GET)
                 .withExpectedResponseStatus(HttpStatus.OK)
                 .withExpectedResponse(RESPONSE)
                 .sendRequestAndVerifyResponse();
-
-
     }
 }

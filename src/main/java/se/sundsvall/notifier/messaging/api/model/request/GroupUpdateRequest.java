@@ -8,6 +8,8 @@ import lombok.Builder;
 @Builder(setterPrefix = "with")
 public record GroupUpdateRequest(
 	@NotBlank String name,
+
 	@NotBlank String description,
+
 	@NotNull Set<Long> employees) {
 }

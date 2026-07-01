@@ -139,7 +139,7 @@ class DirectoryIngestionServiceImpl implements DirectoryIngestionService {
 	private String resolveOrgId(String orgId, Set<String> knownOrgIds) {
 		if (orgId != null && !orgId.isBlank() && !knownOrgIds.contains(orgId)) {
 			LOG.warn("[EMP] org_id '{}' not found, setting to UNKNOWN", orgId);
-			return "UNKNOWN";
+			return UNKNOWN_ORG_ID;
 		}
 		return orgId;
 	}

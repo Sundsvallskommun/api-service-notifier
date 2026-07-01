@@ -86,4 +86,12 @@ public class UserRequest extends BaseUserRequest {
 		UserRequest that = (UserRequest) o;
 		return super.equals(o) && Objects.equals(email, that.email);
 	}
+
+	@Override
+	public String toString() {
+		return "UserRequest{" +
+			"email='" + email + '\'' +
+			", password='" + password + '\'' +
+			'}';
+	}
 }

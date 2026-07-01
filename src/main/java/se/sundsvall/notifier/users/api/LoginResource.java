@@ -21,6 +21,18 @@ import se.sundsvall.notifier.users.service.AuthenticationService;
 	responseCode = "200",
 	description = "Successful Operation",
 	useReturnTypeSchema = true)
+@ApiResponse(
+	responseCode = "400",
+	description = "Bad Request",
+	content = @Content(schema = @Schema(implementation = Problem.class)))
+@ApiResponse(
+	responseCode = "401",
+	description = "Unauthorized",
+	content = @Content(schema = @Schema(implementation = Problem.class)))
+@ApiResponse(
+	responseCode = "500",
+	description = "Internal Server Error",
+	content = @Content(schema = @Schema(implementation = Problem.class)))
 public class LoginResource {
 	private final AuthenticationService authenticationService;
 
@@ -28,18 +40,6 @@ public class LoginResource {
 		this.authenticationService = authenticationService;
 	}
 
-	@ApiResponse(
-		responseCode = "400",
-		description = "Bad Request",
-		content = @Content(schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(
-		responseCode = "401",
-		description = "Unauthorized",
-		content = @Content(schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(
-		responseCode = "500",
-		description = "Internal Server Error",
-		content = @Content(schema = @Schema(implementation = Problem.class)))
 	@PostMapping("/login")
 	@Operation(summary = "Login as a user")
 	public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {

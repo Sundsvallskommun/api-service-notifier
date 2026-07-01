@@ -11,8 +11,7 @@ import se.sundsvall.notifier.csvimport.file.FileManager;
 import se.sundsvall.notifier.csvimport.service.EmployeeImportService;
 import se.sundsvall.notifier.csvimport.service.OrganizationImportService;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.inOrder;
@@ -109,9 +108,9 @@ public class SchedulerTest {
 
 		doThrow(new RuntimeException("exception")).when(employeeImportService).importEmployee(any(Path.class));
 
-		RuntimeException exception = assertThrows(RuntimeException.class, scheduler::importEmployeesJob);
-
-		assertTrue(exception.getMessage().startsWith("[EMP] Import failed"));
+		assertThatThrownBy(scheduler::importEmployeesJob)
+			.isInstanceOf(RuntimeException.class)
+			.hasMessageStartingWith("[EMP] Import failed");
 	}
 
 	@Test
@@ -134,9 +133,9 @@ public class SchedulerTest {
 
 		doThrow(new RuntimeException("exception")).when(organizationImportService).importOrganizations(any(Path.class));
 
-		RuntimeException exception = assertThrows(RuntimeException.class, scheduler::importOrganizationsJob);
-
-		assertTrue(exception.getMessage().startsWith("[ORG] Import failed"));
+		assertThatThrownBy(scheduler::importOrganizationsJob)
+			.isInstanceOf(RuntimeException.class)
+			.hasMessageStartingWith("[ORG] Import failed");
 	}
 
 	@Test
@@ -186,7 +185,7 @@ public class SchedulerTest {
 		doThrow(new RuntimeException("boom")).when(organizationImportService).importOrganizations(any(Path.class));
 
 		// Org failure must abort the whole job so employees are never imported against stale/empty orgs.
-		assertThrows(RuntimeException.class, scheduler::importDirectoryJob);
+		assertThatThrownBy(scheduler::importDirectoryJob).isInstanceOf(RuntimeException.class);
 		verify(employeeImportService, never()).importEmployee(any(Path.class));
 	}
 }

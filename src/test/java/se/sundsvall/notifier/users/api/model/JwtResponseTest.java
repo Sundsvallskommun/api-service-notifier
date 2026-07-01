@@ -2,7 +2,6 @@ package se.sundsvall.notifier.users.api.model;
 
 import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
@@ -13,50 +12,34 @@ class JwtResponseTest {
 
 	@Test
 	void testBean() {
-		MatcherAssert.assertThat(UserEntity.class, allOf(
+		MatcherAssert.assertThat(JwtResponse.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters()));
 	}
 
 	@Test
-	void testGettersAndSetters() {
-		final var token = "token";
-
-		final var jwtResponse = new JwtResponse(token);
-		assertThat(jwtResponse.getToken()).isEqualTo(token);
-
-	}
-
-	@Test
-	void testNullToken() {
-		final var jwtResponse = new JwtResponse();
-		assertThat(jwtResponse.getToken()).isNull();
-	}
-
-	@Test
-	void constructorShouldSetToken() {
-		String token = "token";
-
-		JwtResponse jwtResponse = new JwtResponse(token);
-
-		assertThat(jwtResponse.getToken()).isEqualTo(token);
-	}
-
-	@Test
-	void setterShouldUpdateToken() {
-		JwtResponse jwtResponse = new JwtResponse("oldToken");
+	void constructorSetterAndNullToken() {
+		final var jwtResponse = new JwtResponse("token");
+		assertThat(jwtResponse.getToken()).isEqualTo("token");
 
 		jwtResponse.setToken("newToken");
-
 		assertThat(jwtResponse.getToken()).isEqualTo("newToken");
+
+		assertThat(new JwtResponse().getToken()).isNull();
 	}
 
 	@Test
-	void testHashCodeAndEquals() {
-		final var r1 = new JwtResponse("token");
-		final var r2 = new JwtResponse("token");
+	void equalsHashCodeAndToString() {
+		final var response = new JwtResponse("token");
+		final var equal = new JwtResponse("token");
 
-		assertThat(r1).isEqualTo(r2);
-		assertThat(r1.hashCode()).isEqualTo(r2.hashCode());
+		assertThat(response)
+			.isEqualTo(response)
+			.isEqualTo(equal)
+			.hasSameHashCodeAs(equal)
+			.isNotEqualTo(null)
+			.isNotEqualTo("not a JwtResponse")
+			.isNotEqualTo(new JwtResponse("other"));
+		assertThat(response).hasToString("JwtResponse{token='token'}");
 	}
 }

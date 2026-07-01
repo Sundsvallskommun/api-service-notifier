@@ -19,7 +19,7 @@ import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -135,9 +135,9 @@ public class OrganizationServiceTest {
 	void getOrgsByIds_Null_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var exception = assertThrows(IllegalArgumentException.class, () -> service.getOrgsById(null));
-
-		assertThat(exception.getMessage()).isEqualTo("orgid is required");
+		assertThatThrownBy(() -> service.getOrgsById(null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("orgid is required");
 		verifyNoInteractions(organizationRepository, mapper);
 	}
 
@@ -145,9 +145,9 @@ public class OrganizationServiceTest {
 	void getSpecificOrg_Id_Null_test() {
 		var service = new OrganizationService(mapper, organizationRepository, employeeRepository);
 
-		var exception = assertThrows(IllegalArgumentException.class, () -> service.getSpecificOrg(null));
-
-		assertThat(exception.getMessage()).isEqualTo("orgid is required");
+		assertThatThrownBy(() -> service.getSpecificOrg(null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("orgid is required");
 		verifyNoInteractions(organizationRepository, mapper);
 	}
 
@@ -158,10 +158,9 @@ public class OrganizationServiceTest {
 		when(organizationRepository.findOrgWithChildrenAndDescendants("1"))
 			.thenReturn(List.of());
 
-		var exception = assertThrows(ThrowableProblem.class,
-			() -> service.getOrgChildrenAndDescendantsWithId("1"));
-
-		assertThat(exception.getMessage()).contains("No organization with id '1' could be found");
+		assertThatThrownBy(() -> service.getOrgChildrenAndDescendantsWithId("1"))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasMessageContaining("No organization with id '1' could be found");
 		verify(organizationRepository).findOrgWithChildrenAndDescendants("1");
 		verifyNoInteractions(mapper);
 	}
@@ -173,10 +172,9 @@ public class OrganizationServiceTest {
 		when(organizationRepository.findOrgAndChildren("1"))
 			.thenReturn(List.of());
 
-		var exception = assertThrows(ThrowableProblem.class,
-			() -> service.getOrgAndChildrenWithId("1"));
-
-		assertThat(exception.getMessage()).contains("No organization with id '1' could be found");
+		assertThatThrownBy(() -> service.getOrgAndChildrenWithId("1"))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasMessageContaining("No organization with id '1' could be found");
 		verify(organizationRepository).findOrgAndChildren("1");
 		verifyNoInteractions(mapper);
 	}
@@ -188,10 +186,9 @@ public class OrganizationServiceTest {
 		when(organizationRepository.findByOrgIdIn(List.of("1")))
 			.thenReturn(List.of());
 
-		var exception = assertThrows(ThrowableProblem.class,
-			() -> service.getOrgsById(List.of("1")));
-
-		assertThat(exception.getMessage()).contains("No organization found.");
+		assertThatThrownBy(() -> service.getOrgsById(List.of("1")))
+			.isInstanceOf(ThrowableProblem.class)
+			.hasMessageContaining("No organization found.");
 		verify(organizationRepository).findByOrgIdIn(List.of("1"));
 		verifyNoInteractions(mapper);
 	}

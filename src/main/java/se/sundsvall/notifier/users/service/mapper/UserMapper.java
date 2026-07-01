@@ -19,10 +19,10 @@ public class UserMapper {
 				.withId(entity.getId())
 				.withPhoneNumber(entity.getPhoneNumber())
 				.withMunicipalityName(Optional.ofNullable(MunicipalityUtils.findById(entity.getMunicipalityId()))
-					.map(m -> m.name())
+					.map(MunicipalityUtils.Municipality::name)
 					.orElse(null))
 				.withStatus(String.valueOf(entity.getStatus()))
-				.withRole(entity.getRole() != null ? entity.getRole().name() : null))
+				.withRole(Optional.of(entity.getRole()).map(Enum::name).orElse(null)))
 			.orElse(null);
 	}
 
@@ -34,9 +34,7 @@ public class UserMapper {
 				.withMunicipalityId(resolveMunicipalityId(request.getMunicipalityName()))
 				.withPassword(encryptedPassword)
 				.withStatus(Status.valueOf(request.getStatus().toUpperCase()))
-				.withRole(request.getRole() != null
-					? Role.valueOf(request.getRole().toUpperCase())
-					: Role.USER))
+				.withRole(Optional.of(request.getRole()).map(s -> Role.valueOf(s.toUpperCase())).orElse(Role.USER)))
 			.orElse(null);
 	}
 

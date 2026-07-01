@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.apptest;
+package apptest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,6 @@ class CreateUsersIT extends AbstractAppTest {
 
     @Test
     void test01_createUser() {
-
         assertThat(userRepository.findByEmail("test1@sundsvall.se")).isEmpty();
 
         setupCall()
@@ -40,6 +39,5 @@ class CreateUsersIT extends AbstractAppTest {
         assertThat(user.get().getPhoneNumber()).isEqualTo("0701234567");
         assertThat(user.get().getMunicipalityId()).isEqualTo("2281");
         assertThat(user.get().getStatus()).isEqualTo(Status.INACTIVE);
-
     }
 }

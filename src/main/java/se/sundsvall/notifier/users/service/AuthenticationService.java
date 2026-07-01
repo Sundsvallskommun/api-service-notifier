@@ -37,6 +37,7 @@ public class AuthenticationService {
 		if (Status.SUSPENDED == user.getStatus()) {
 			throw Problem.valueOf(FORBIDDEN, "Account suspended");
 		}
+
 		if (Status.INACTIVE == user.getStatus()) {
 			throw Problem.valueOf(FORBIDDEN, "Account inactive");
 		}

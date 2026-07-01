@@ -3,8 +3,8 @@ package se.sundsvall.notifier.users.api.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import java.util.Objects;
+import se.sundsvall.dept44.common.validators.annotation.MemberOf;
 import se.sundsvall.dept44.common.validators.annotation.ValidMobileNumber;
-import se.sundsvall.notifier.users.api.validation.ValidEnum;
 import se.sundsvall.notifier.users.api.validation.ValidMunicipalityName;
 import se.sundsvall.notifier.users.integration.db.model.enums.Role;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
@@ -18,15 +18,15 @@ public abstract class BaseUserRequest {
 
 	@Schema(description = "Kommunnamn", example = "Sundsvall")
 	@NotBlank(message = "cannot be blank")
-	@ValidMunicipalityName(message = "must be a valid municipality name")
+	@ValidMunicipalityName
 	private String municipalityName;
 
 	@Schema(description = "Status", example = "ACTIVE")
-	@ValidEnum(message = "must be ACTIVE, INACTIVE or SUSPENDED", enumClass = Status.class, ignoreCase = true)
+	@MemberOf(value = Status.class, caseSensitive = false)
 	private String status;
 
 	@Schema(description = "Roll", example = "USER")
-	@ValidEnum(message = "must be USER or ADMIN", enumClass = Role.class, ignoreCase = true)
+	@MemberOf(value = Role.class, caseSensitive = false)
 	private String role;
 
 	public String getPhoneNumber() {
@@ -79,5 +79,15 @@ public abstract class BaseUserRequest {
 			&& Objects.equals(municipalityName, that.municipalityName)
 			&& Objects.equals(status, that.status)
 			&& Objects.equals(role, that.role);
+	}
+
+	@Override
+	public String toString() {
+		return "BaseUserRequest{" +
+			"phoneNumber='" + phoneNumber + '\'' +
+			", municipalityName='" + municipalityName + '\'' +
+			", status='" + status + '\'' +
+			", role='" + role + '\'' +
+			'}';
 	}
 }

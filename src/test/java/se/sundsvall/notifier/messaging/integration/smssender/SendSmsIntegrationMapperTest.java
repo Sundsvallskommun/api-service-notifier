@@ -5,9 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class SendSmsIntegrationMapperTest {
 	private SmsSenderIntegrationMapper mapper;
@@ -29,18 +27,18 @@ public class SendSmsIntegrationMapperTest {
 
 		var result = mapper.toSendSmsRequest(dto);
 
-		assertNotNull(result.getSender());
-		assertEquals("Sundsvall", result.getSender().getName());
+		assertThat(result.getSender()).isNotNull();
+		assertThat(result.getSender().getName()).isEqualTo("Sundsvall");
 
-		assertEquals("0701234567", result.getMobileNumber());
-		assertEquals("testMessage", result.getMessage());
+		assertThat(result.getMobileNumber()).isEqualTo("0701234567");
+		assertThat(result.getMessage()).isEqualTo("testMessage");
 
-		assertEquals(PriorityEnum.HIGH, result.getPriority());
+		assertThat(result.getPriority()).isEqualTo(PriorityEnum.HIGH);
 
 	}
 
 	@Test
 	void toSendSmsRequest_dtoNull() {
-		assertNull(mapper.toSendSmsRequest(null));
+		assertThat(mapper.toSendSmsRequest(null)).isNull();
 	}
 }

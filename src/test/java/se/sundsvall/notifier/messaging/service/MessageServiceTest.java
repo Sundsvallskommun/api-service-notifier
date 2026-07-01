@@ -3,7 +3,6 @@ package se.sundsvall.notifier.messaging.service;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -32,8 +31,8 @@ import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 import se.sundsvall.notifier.messaging.service.mapper.MessageMapper;
 import se.sundsvall.notifier.messaging.service.utility.PhoneNumberUtil;
 
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
@@ -119,12 +118,11 @@ class MessageServiceTest {
 		var email = "test";
 
 		when(messageRepository.findBySenderAndId(any(), any())).thenReturn(Optional.empty());
-		var exception = assertThrows(Throwable.class, () -> messageService.getMessageById(email, messageId));
-
-		verify(messageRepository).findBySenderAndId(any(), any());
-		Assertions.assertThat(exception)
+		assertThatThrownBy(() -> messageService.getMessageById(email, messageId))
 			.isInstanceOf(Problem.class)
 			.hasMessageContaining("Message with id: " + messageId + " not found");
+
+		verify(messageRepository).findBySenderAndId(any(), any());
 		verifyNoInteractions(messageMapper);
 	}
 

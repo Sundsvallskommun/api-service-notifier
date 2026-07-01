@@ -16,8 +16,7 @@ import se.sundsvall.notifier.messaging.ingestion.DirectoryIngestionService;
 import se.sundsvall.notifier.messaging.ingestion.EmployeeRecord;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -79,10 +78,9 @@ public class EmployeeImportServiceTest {
 		// Arrange
 		final Path missing = tempDir.resolve("missing.csv");
 
-		// Act
-		final RuntimeException exception = assertThrows(RuntimeException.class, () -> importService.importEmployee(missing));
-
-		// Assert
-		assertTrue(exception.getMessage().startsWith("Error Importing organization from:"));
+		// Act & Assert
+		assertThatThrownBy(() -> importService.importEmployee(missing))
+			.isInstanceOf(RuntimeException.class)
+			.hasMessageStartingWith("Error Importing organization from:");
 	}
 }

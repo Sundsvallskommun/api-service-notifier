@@ -22,7 +22,6 @@ import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
@@ -144,7 +143,7 @@ public class GroupServiceTest {
 
 		var result = groupService.getGroupById(groupId);
 
-		assertEquals(response, result);
+		assertThat(result).isEqualTo(response);
 		verify(groupRepositoryMock).findById(groupId);
 		verify(mapper).mapToGroupResponse(group);
 		verifyNoInteractions(employeeRepositoryMock);
@@ -190,16 +189,16 @@ public class GroupServiceTest {
 
 		var id = groupService.createGroup(request);
 
-		assertEquals(123L, id);
+		assertThat(id).isEqualTo(123L);
 
 		verify(employeeRepositoryMock).findAllByIdIn(request.employees());
 		verify(groupRepositoryMock).save(groupCaptor.capture());
 
 		var groupToSave = groupCaptor.getValue();
-		assertEquals("Team A", groupToSave.getName());
-		assertEquals("Beskrivning", groupToSave.getDescription());
-		assertEquals("creator-123", groupToSave.getCreatorId());
-		assertEquals(employees, groupToSave.getEmployees());
+		assertThat(groupToSave.getName()).isEqualTo("Team A");
+		assertThat(groupToSave.getDescription()).isEqualTo("Beskrivning");
+		assertThat(groupToSave.getCreatorId()).isEqualTo("creator-123");
+		assertThat(groupToSave.getEmployees()).isEqualTo(employees);
 
 		verifyNoInteractions(mapper);
 		verifyNoMoreInteractions(employeeRepositoryMock, groupRepositoryMock, mapper);
@@ -266,7 +265,7 @@ public class GroupServiceTest {
 
 		var result = groupService.updateGroup(groupId, request);
 
-		assertEquals(response, result);
+		assertThat(result).isEqualTo(response);
 
 		verify(groupRepositoryMock).findById(groupId);
 		verify(employeeRepositoryMock).findAllByIdIn(request.employees());
@@ -276,11 +275,11 @@ public class GroupServiceTest {
 
 		verify(mapper).mapToGroupResponse(groupToSave);
 
-		assertEquals(groupId, groupToSave.getId());
-		assertEquals("New name", groupToSave.getName());
-		assertEquals("New description", groupToSave.getDescription());
-		assertEquals("creator-123", groupToSave.getCreatorId());
-		assertEquals(employees, groupToSave.getEmployees());
+		assertThat(groupToSave.getId()).isEqualTo(groupId);
+		assertThat(groupToSave.getName()).isEqualTo("New name");
+		assertThat(groupToSave.getDescription()).isEqualTo("New description");
+		assertThat(groupToSave.getCreatorId()).isEqualTo("creator-123");
+		assertThat(groupToSave.getEmployees()).isEqualTo(employees);
 
 		verifyNoMoreInteractions(employeeRepositoryMock, groupRepositoryMock, mapper);
 	}

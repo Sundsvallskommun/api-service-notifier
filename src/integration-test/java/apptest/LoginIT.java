@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.apptest;
+package apptest;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpMethod;
@@ -17,7 +17,6 @@ class LoginIT extends AbstractAppTest {
 
     @Test
     void test01_loginSuccess() {
-
         setupCall()
                 .withServicePath("/api/users/auth/login")
                 .withHttpMethod(HttpMethod.POST)

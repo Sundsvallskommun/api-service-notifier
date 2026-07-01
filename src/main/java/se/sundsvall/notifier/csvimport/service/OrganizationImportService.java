@@ -56,11 +56,11 @@ public class OrganizationImportService {
 				final var row = it.next();
 
 				batch.add(new OrganizationRecord(
-					ImportUtil.nullIfNullString(row.CompanyId),
-					ImportUtil.nullIfNullString(row.OrgId),
-					ImportUtil.nullIfNullString(row.OrgName),
-					ImportUtil.nullIfNullString(row.ParentId),
-					ImportUtil.nullIfNullString(row.TreeLevel)));
+					ImportUtil.sanitize(row.companyId),
+					ImportUtil.sanitize(row.orgId),
+					ImportUtil.sanitize(row.orgName),
+					ImportUtil.sanitize(row.parentId),
+					ImportUtil.sanitize(row.treeLevel)));
 
 				if (batch.size() >= batchSize) {
 					ingestionService.upsertOrganizations(batch);

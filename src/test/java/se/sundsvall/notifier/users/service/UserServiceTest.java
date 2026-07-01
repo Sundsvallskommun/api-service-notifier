@@ -19,7 +19,7 @@ import se.sundsvall.notifier.users.integration.db.model.enums.Status;
 import se.sundsvall.notifier.users.service.mapper.UserMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.*;
@@ -250,11 +250,9 @@ class UserServiceTest {
 		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.of(new UserEntity()));
 
 		// Act & Assert
-		final var exception = assertThrows(Throwable.class, () -> userService.createUser(userRequest));
-
-		assertThat((exception))
+		assertThatThrownBy(() -> userService.createUser(userRequest))
 			.isInstanceOf(Problem.class)
-			.hasMessageContaining("user already exists");
+			.hasMessageContaining("Conflict: user Test@testmail.se already exists");
 
 		verify(userRepositoryMock).findByEmail(email);
 		verify(userRepositoryMock, never()).save(any());
@@ -268,10 +266,8 @@ class UserServiceTest {
 
 		when(userRepositoryMock.findByEmail(email)).thenReturn(Optional.empty());
 
-		// Act
-		final var exception = assertThrows(Throwable.class, () -> userService.getUserByEmail(email));
-		// Assert
-		assertThat(exception)
+		// Act & Assert
+		assertThatThrownBy(() -> userService.getUserByEmail(email))
 			.isInstanceOf(Problem.class)
 			.hasMessageContaining("user " + email + " was not found");
 
@@ -289,12 +285,53 @@ class UserServiceTest {
 
 		// Mock
 		when(userRepositoryMock.findById(id)).thenReturn(Optional.empty());
-		final var problem = assertThrows(Throwable.class, () -> userService.updateUserById(request, id));
 
 		// Assert
-		assertThat(problem)
+		assertThatThrownBy(() -> userService.updateUserById(request, id))
 			.isNotNull()
 			.hasMessage("Not Found: user " + id + " was not found");
+	}
+
+	@Test
+	void updateUserPasswordById() {
+		// Arrange
+		final var id = 1L;
+		final var rawPassword = "newSecret123";
+		final var hashedPassword = "hashedNewSecret";
+		final var userEntity = UserEntity.create().withId(id).withPassword("oldHash");
+
+		when(userRepositoryMock.findById(id)).thenReturn(Optional.of(userEntity));
+		when(passwordEncoderMock.encode(rawPassword)).thenReturn(hashedPassword);
+
+		// Act
+		userService.updateUserPasswordById(id, rawPassword);
+
+		// Verify/Assert
+		assertThat(userEntity.getPassword()).isEqualTo(hashedPassword);
+		verify(userRepositoryMock).findById(id);
+		verify(passwordEncoderMock).encode(rawPassword);
+		verify(userRepositoryMock).save(same(userEntity));
+		verifyNoMoreInteractions(userRepositoryMock, passwordEncoderMock);
+		verifyNoInteractions(userMapperMock);
+	}
+
+	@Test
+	void updateUserPasswordByIdNotFound() {
+		// Arrange
+		final var id = 99L;
+		final var rawPassword = "newSecret123";
+
+		when(userRepositoryMock.findById(id)).thenReturn(Optional.empty());
+
+		// Act & Assert
+		assertThatThrownBy(() -> userService.updateUserPasswordById(id, rawPassword))
+			.isInstanceOf(Problem.class)
+			.hasMessage("Not Found: user " + id + " was not found");
+
+		verify(userRepositoryMock).findById(id);
+		verify(userRepositoryMock, never()).save(any());
+		verifyNoInteractions(passwordEncoderMock, userMapperMock);
+		verifyNoMoreInteractions(userRepositoryMock);
 	}
 
 	@Test

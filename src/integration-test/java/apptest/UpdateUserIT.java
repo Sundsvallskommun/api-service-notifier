@@ -1,4 +1,4 @@
-package se.sundsvall.notifier.users.apptest;
+package apptest;
 
 
 import org.junit.jupiter.api.Test;
@@ -34,7 +34,6 @@ class UpdateUserIT extends AbstractAppTest {
     @Test
     void test01_updateUserWithId() {
         final Long id = 1L;
-
         assertThat(userRepository.findById(id)).isPresent();
 
         setupCall()

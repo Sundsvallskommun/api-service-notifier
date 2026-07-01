@@ -17,7 +17,7 @@ import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
 import se.sundsvall.notifier.messaging.service.mapper.EntityToResponseMapper;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
@@ -89,9 +89,9 @@ public class EmployeeServiceTest {
 	void getEmployee_Org_Id_Null_test() {
 		var service = new EmployeeService(employeeRepository, mapper);
 
-		var exception = assertThrows(IllegalArgumentException.class, () -> service.getEmployeesByOrgList(null));
-
-		assertThat(exception.getMessage()).isEqualTo("org id is required");
+		assertThatThrownBy(() -> service.getEmployeesByOrgList(null))
+			.isInstanceOf(IllegalArgumentException.class)
+			.hasMessage("org id is required");
 		verifyNoInteractions(employeeRepository, mapper);
 	}
 

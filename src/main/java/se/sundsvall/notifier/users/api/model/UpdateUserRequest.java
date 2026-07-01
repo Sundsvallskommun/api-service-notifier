@@ -65,4 +65,11 @@ public class UpdateUserRequest extends BaseUserRequest {
 		UpdateUserRequest that = (UpdateUserRequest) o;
 		return super.equals(o) && Objects.equals(email, that.email);
 	}
+
+	@Override
+	public String toString() {
+		return "UpdateUserRequest{" +
+			"email='" + email + '\'' +
+			'}';
+	}
 }

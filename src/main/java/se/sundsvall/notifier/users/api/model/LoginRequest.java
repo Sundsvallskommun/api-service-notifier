@@ -3,6 +3,7 @@ package se.sundsvall.notifier.users.api.model;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import java.util.Objects;
 
 public class LoginRequest {
 
@@ -42,5 +43,25 @@ public class LoginRequest {
 	public LoginRequest withPassword(String password) {
 		setPassword(password);
 		return this;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		if (!(o instanceof final LoginRequest that))
+			return false;
+		return Objects.equals(email, that.email) && Objects.equals(password, that.password);
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(email, password);
+	}
+
+	@Override
+	public String toString() {
+		return "LoginRequest{" +
+			"email='" + email + '\'' +
+			", password='" + password + '\'' +
+			'}';
 	}
 }

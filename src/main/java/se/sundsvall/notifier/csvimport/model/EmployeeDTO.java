@@ -1,14 +1,36 @@
 package se.sundsvall.notifier.csvimport.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EmployeeDTO {
-	public String PersonId;
-	public String Givenname;
-	public String Lastname;
-	public String WorkMobile;
-	public String WorkPhone;
-	public String Title;
-	public String OrgId;
-	public String PrimaryEMailAddress;
-	public String ManagerId;
-	public String ManagerCode;
+
+	@JsonProperty("PersonId")
+	public String personId;
+
+	@JsonProperty("Givenname")
+	public String givenName;
+
+	@JsonProperty("Lastname")
+	public String lastName;
+
+	@JsonProperty("WorkMobile")
+	public String workMobile;
+
+	@JsonProperty("WorkPhone")
+	public String workPhone;
+
+	@JsonProperty("Title")
+	public String title;
+
+	@JsonProperty("OrgId")
+	public String orgId;
+
+	@JsonProperty("PrimaryEMailAddress")
+	public String primaryEmailAddress;
+
+	@JsonProperty("ManagerId")
+	public String managerId;
+
+	@JsonProperty("ManagerCode")
+	public String managerCode;
 }

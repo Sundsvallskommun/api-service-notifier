@@ -11,9 +11,10 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEqualsFor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCodeFor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToStringExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static org.hamcrest.MatcherAssert.*;
 import static org.hamcrest.core.AllOf.allOf;
 
-public class OrganizationEntityTest {
+class OrganizationEntityTest {
 
 	@BeforeAll
 	static void setUp() {
@@ -24,7 +25,7 @@ public class OrganizationEntityTest {
 
 	@Test
 	void testBean() {
-		org.hamcrest.MatcherAssert.assertThat(OrganizationEntity.class, allOf(
+		assertThat(OrganizationEntity.class, allOf(
 			hasValidBeanConstructor(),
 			hasValidGettersAndSetters(),
 			hasValidBeanEqualsFor("id"),

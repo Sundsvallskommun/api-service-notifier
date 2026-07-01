@@ -4,7 +4,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import java.util.List;
 import org.springframework.data.domain.Page;
@@ -24,16 +23,15 @@ import se.sundsvall.notifier.messaging.service.EmployeeService;
 @RestController
 @RequestMapping(path = "/api/notifier/employees", produces = MediaType.APPLICATION_JSON_VALUE)
 @Tag(name = "Employee Resource")
-@ApiResponses({
-	@ApiResponse(
-		responseCode = "200",
-		description = "Successful Operation",
-		useReturnTypeSchema = true),
-	@ApiResponse(
-		responseCode = "500",
-		description = "Internal Server Error",
-		content = @Content(schema = @Schema(implementation = Problem.class)))
-})
+@ApiResponse(
+	responseCode = "200",
+	description = "Successful Operation",
+	useReturnTypeSchema = true)
+@ApiResponse(
+	responseCode = "500",
+	description = "Internal Server Error",
+	content = @Content(schema = @Schema(implementation = Problem.class)))
+
 public class EmployeeResource {
 
 	private final EmployeeService employeeService;

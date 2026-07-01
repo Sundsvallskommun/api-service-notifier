@@ -36,4 +36,11 @@ public class JwtResponse {
 		JwtResponse other = (JwtResponse) obj;
 		return Objects.equals(token, other.token);
 	}
+
+	@Override
+	public String toString() {
+		return "JwtResponse{" +
+			"token='" + token + '\'' +
+			'}';
+	}
 }

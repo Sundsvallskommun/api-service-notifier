@@ -14,8 +14,7 @@ import se.sundsvall.notifier.messaging.ingestion.DirectoryIngestionService;
 import se.sundsvall.notifier.messaging.ingestion.OrganizationRecord;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -63,10 +62,9 @@ public class OrganizationImportServiceTest {
 		// Arrange
 		final Path missing = tempDir.resolve("missing.csv");
 
-		// Act
-		final RuntimeException exception = assertThrows(RuntimeException.class, () -> importService.importOrganizations(missing));
-
-		// Assert
-		assertTrue(exception.getMessage().startsWith("Error Importing organization from:"));
+		// Act & Assert
+		assertThatThrownBy(() -> importService.importOrganizations(missing))
+			.isInstanceOf(RuntimeException.class)
+			.hasMessageStartingWith("Error Importing organization from:");
 	}
 }

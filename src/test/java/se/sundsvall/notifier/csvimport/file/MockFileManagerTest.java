@@ -8,7 +8,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.springframework.test.util.ReflectionTestUtils;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatCode;
 
 class MockFileManagerTest {
 
@@ -35,14 +36,16 @@ class MockFileManagerTest {
 		mockFileManager.downloadFile(incomingDir, "OrgExport.csv");
 
 		Path copied = incomingDir.resolve("OrgExport.csv");
-		assertTrue(Files.exists(copied));
-		assertEquals(content, Files.readString(copied));
+		assertThat(copied).exists();
+		assertThat(copied).hasContent(content);
 	}
 
 	@Test
 	void downloadFile_whenSourceFileMissing_doesNotThrow() {
 		Path incomingDir = tempDir.resolve("incoming");
 
-		assertDoesNotThrow(() -> mockFileManager.downloadFile(incomingDir, "missing.csv"));
+		// Source file does not exist under fileSourceDir -> Files.copy throws, which the mock swallows.
+		assertThatCode(() -> mockFileManager.downloadFile(incomingDir, "missing.csv"))
+			.doesNotThrowAnyException();
 	}
 }

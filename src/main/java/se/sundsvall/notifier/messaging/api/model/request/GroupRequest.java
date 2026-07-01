@@ -8,7 +8,10 @@ import lombok.Builder;
 @Builder(setterPrefix = "with")
 public record GroupRequest(
 	@NotBlank String name,
+
 	@NotBlank String description,
+
 	@NotBlank String creatorId,
+
 	@NotNull Set<Long> employees) {
 }

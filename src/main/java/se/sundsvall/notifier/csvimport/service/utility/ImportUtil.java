@@ -1,13 +1,22 @@
 package se.sundsvall.notifier.csvimport.service.utility;
 
-public class ImportUtil {
+import java.util.Optional;
 
-	public static String nullIfNullString(String string) {
-		if (string == null)
-			return null;
-		String trimmed = string.trim();
-		if (trimmed.isEmpty() || trimmed.equalsIgnoreCase("NULL"))
-			return null;
-		return trimmed;
+public final class ImportUtil {
+
+	private static final String NULL_LITERAL = "NULL";
+
+	private ImportUtil() {}
+
+	/**
+	 * Trims the CSV value and normalises "empty" values to {@code null}: blank strings and the
+	 * literal text {@code "NULL"} (case-insensitive) both become {@code null}.
+	 */
+	public static String sanitize(final String value) {
+		return Optional.ofNullable(value)
+			.map(String::trim)
+			.filter(trimmed -> !trimmed.isEmpty())
+			.filter(trimmed -> !trimmed.equalsIgnoreCase(NULL_LITERAL))
+			.orElse(null);
 	}
 }

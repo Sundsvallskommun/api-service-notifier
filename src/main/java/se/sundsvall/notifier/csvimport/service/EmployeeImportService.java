@@ -58,16 +58,16 @@ public class EmployeeImportService {
 				final var row = it.next();
 
 				batch.add(new EmployeeRecord(
-					cleanGuid(row.PersonId),
-					ImportUtil.nullIfNullString(row.Givenname),
-					ImportUtil.nullIfNullString(row.Lastname),
-					ImportUtil.nullIfNullString(row.WorkMobile),
-					ImportUtil.nullIfNullString(row.WorkPhone),
-					ImportUtil.nullIfNullString(row.Title),
-					ImportUtil.nullIfNullString(row.OrgId),
-					ImportUtil.nullIfNullString(row.PrimaryEMailAddress),
-					cleanGuid(row.ManagerId),
-					ImportUtil.nullIfNullString(row.ManagerCode)));
+					cleanGuid(row.personId),
+					ImportUtil.sanitize(row.givenName),
+					ImportUtil.sanitize(row.lastName),
+					ImportUtil.sanitize(row.workMobile),
+					ImportUtil.sanitize(row.workPhone),
+					ImportUtil.sanitize(row.title),
+					ImportUtil.sanitize(row.orgId),
+					ImportUtil.sanitize(row.primaryEmailAddress),
+					cleanGuid(row.managerId),
+					ImportUtil.sanitize(row.managerCode)));
 
 				if (batch.size() >= batchSize) {
 					ingestionService.upsertEmployees(batch);
@@ -96,7 +96,7 @@ public class EmployeeImportService {
 	}
 
 	private String cleanGuid(String guid) {
-		guid = ImportUtil.nullIfNullString(guid);
+		guid = ImportUtil.sanitize(guid);
 		if (guid == null) {
 			return null;
 		}

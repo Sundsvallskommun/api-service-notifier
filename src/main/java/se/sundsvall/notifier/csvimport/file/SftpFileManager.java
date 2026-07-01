@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class SftpFileManager extends AbstractFileManager {
 
 	private static final Logger log = LoggerFactory.getLogger(SftpFileManager.class);
-	SftpProperties sftpProperties;
+	private final SftpProperties sftpProperties;
 
 	public SftpFileManager(SftpProperties sftpProperties) {
 		this.sftpProperties = sftpProperties;

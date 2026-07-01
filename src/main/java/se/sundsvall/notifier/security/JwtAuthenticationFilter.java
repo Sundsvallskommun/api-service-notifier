@@ -7,6 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
+
 import org.jspecify.annotations.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -31,7 +33,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 		String token = null;
 
-		final String authHeader = request.getHeader("Authorization");
+		final var authHeader = request.getHeader("Authorization");
 		if (authHeader != null && authHeader.startsWith("Bearer ")) {
 			token = authHeader.substring(7);
 		} else if (request.getCookies() != null) {
@@ -44,12 +46,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		}
 
 		if (token != null && jwtUtil.validateToken(token)) {
-			final String email = jwtUtil.extractUsername(token);
-			final String role = jwtUtil.extractRole(token);
+			final var email = jwtUtil.extractUsername(token);
+			final var role = jwtUtil.extractRole(token);
 
-			final var authorities = role != null
-				? List.of(new SimpleGrantedAuthority("ROLE_" + role))
-				: List.<SimpleGrantedAuthority>of();
+			final var authorities = Optional.ofNullable(role)
+				.filter(r -> !r.isBlank())
+				.map(r -> List.of(new SimpleGrantedAuthority("ROLE_" + r)))
+				.orElseGet(List::of);
 
 			final var authenticationToken = new UsernamePasswordAuthenticationToken(email, null, authorities);
 			authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
@@ -61,7 +64,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
 	@Override
 	protected boolean shouldNotFilter(HttpServletRequest request) {
-		final String path = request.getServletPath();
+		final var path = request.getServletPath();
 		return path.equals("/api/users/auth/login") || path.equals("/api/users/auth/logout");
 	}
 }

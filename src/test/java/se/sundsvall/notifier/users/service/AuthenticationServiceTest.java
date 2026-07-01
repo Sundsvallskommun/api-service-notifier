@@ -16,7 +16,7 @@ import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,10 +68,7 @@ class AuthenticationServiceTest {
 		when(passwordEncoderMock.matches("password", hashedPassword))
 			.thenReturn(true);
 
-		final var exception = assertThrows(Throwable.class,
-			() -> authenticationService.login(loginRequest));
-
-		assertThat(exception)
+		assertThatThrownBy(() -> authenticationService.login(loginRequest))
 			.isInstanceOf(Problem.class)
 			.hasMessageContaining("Account suspended");
 	}
@@ -92,10 +89,7 @@ class AuthenticationServiceTest {
 		when(passwordEncoderMock.matches("password", hashedPassword))
 			.thenReturn(true);
 
-		final var exception = assertThrows(Throwable.class,
-			() -> authenticationService.login(loginRequest));
-
-		assertThat(exception)
+		assertThatThrownBy(() -> authenticationService.login(loginRequest))
 			.isInstanceOf(Problem.class)
 			.hasMessageContaining("Account inactive");
 	}

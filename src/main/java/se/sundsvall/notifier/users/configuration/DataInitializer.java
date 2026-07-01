@@ -22,8 +22,8 @@ public class DataInitializer implements CommandLineRunner {
 	@Value("${user.credentials.municipalityId}")
 	String municipalityId;
 
-	UserRepository userRepository;
-	PasswordEncoder passwordEncoder;
+	final UserRepository userRepository;
+	final PasswordEncoder passwordEncoder;
 
 	public DataInitializer(UserRepository userRepository, PasswordEncoder passwordEncoder) {
 		this.userRepository = userRepository;
