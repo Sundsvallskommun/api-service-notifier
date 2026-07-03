@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.InOrder;
 import org.mockito.Mockito;
 import se.sundsvall.notifier.csvimport.file.FileManager;
 import se.sundsvall.notifier.csvimport.service.EmployeeImportService;
@@ -27,26 +26,26 @@ public class SchedulerTest {
 	@Test
 	void importOrganizationsJobTest() throws Exception {
 		// arrange
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
 
-		String orgCsv = "org.csv";
+		var orgCsv = "org.csv";
 
 		setField(scheduler, "incomingDir", incomingDir);
 		setField(scheduler, "processedDir", processedDir);
 		setField(scheduler, "orgFileName", orgCsv);
 
-		Path expectedFile = incomingDir.resolve(orgCsv);
-		Path expectedOldFile = processedDir.resolve(orgCsv);
+		var expectedFile = incomingDir.resolve(orgCsv);
+		var expectedOldFile = processedDir.resolve(orgCsv);
 
 		// act
 		scheduler.importOrganizationsJob();
@@ -59,26 +58,26 @@ public class SchedulerTest {
 	@Test
 	void importEmployeesJobTest() throws Exception {
 		// arrange
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
 
-		String empCsv = "emp.csv";
+		var empCsv = "emp.csv";
 
 		setField(scheduler, "incomingDir", incomingDir);
 		setField(scheduler, "processedDir", processedDir);
 		setField(scheduler, "empFileName", empCsv);
 
-		Path expectedFile = incomingDir.resolve(empCsv);
-		Path expectedOldFile = processedDir.resolve(empCsv);
+		var expectedFile = incomingDir.resolve(empCsv);
+		var expectedOldFile = processedDir.resolve(empCsv);
 
 		// act
 		scheduler.importEmployeesJob();
@@ -90,14 +89,14 @@ public class SchedulerTest {
 
 	@Test
 	void importEmployeeJob_throwsException() throws IOException {
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
@@ -115,14 +114,14 @@ public class SchedulerTest {
 
 	@Test
 	void importOrganizationJob_throwsException() throws IOException {
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
@@ -140,14 +139,14 @@ public class SchedulerTest {
 
 	@Test
 	void importDirectoryJob_importsOrganizationsBeforeEmployees() throws Exception {
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
 
@@ -159,21 +158,21 @@ public class SchedulerTest {
 		scheduler.importDirectoryJob();
 
 		// Org must be imported before employees — employee org-resolution depends on a populated org table.
-		final InOrder inOrder = inOrder(organizationImportService, employeeImportService);
+		final var inOrder = inOrder(organizationImportService, employeeImportService);
 		inOrder.verify(organizationImportService).importOrganizations(incomingDir.resolve("org.csv"));
 		inOrder.verify(employeeImportService).importEmployee(incomingDir.resolve("emp.csv"));
 	}
 
 	@Test
 	void importDirectoryJob_orgFailureSkipsEmployees() throws Exception {
-		EmployeeImportService employeeImportService = Mockito.mock(EmployeeImportService.class);
-		OrganizationImportService organizationImportService = Mockito.mock(OrganizationImportService.class);
-		FileManager fileManager = Mockito.mock(FileManager.class);
+		var employeeImportService = Mockito.mock(EmployeeImportService.class);
+		var organizationImportService = Mockito.mock(OrganizationImportService.class);
+		var fileManager = Mockito.mock(FileManager.class);
 
-		Scheduler scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
+		var scheduler = new Scheduler(employeeImportService, organizationImportService, fileManager);
 
-		Path incomingDir = tempDir.resolve("incoming");
-		Path processedDir = tempDir.resolve("processed");
+		var incomingDir = tempDir.resolve("incoming");
+		var processedDir = tempDir.resolve("processed");
 		Files.createDirectories(incomingDir);
 		Files.createDirectories(processedDir);
 

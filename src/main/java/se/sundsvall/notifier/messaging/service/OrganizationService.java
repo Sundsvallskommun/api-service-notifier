@@ -75,7 +75,7 @@ public class OrganizationService {
 	}
 
 	public Page<OrganizationResponse> getOrganizationWithSearch(String search, Pageable pageable) {
-		String searchLowercase = search.trim().toLowerCase();
+		var searchLowercase = search.trim().toLowerCase();
 		Page<OrganizationEntity> searchResult = organizationRepository.findByNameContaining(searchLowercase, pageable);
 		return searchResult.map(mapper::mapToOrganizationResponse);
 	}
@@ -93,7 +93,7 @@ public class OrganizationService {
 				response.add(mapper.mapToOrganizationResponse(topChild));
 				continue;
 			}
-			OrganizationEntity triggeredNode = findLastDuplicateBeforeBranch(topChild);
+			var triggeredNode = findLastDuplicateBeforeBranch(topChild);
 
 			List<OrganizationEntity> resolvedChildren = organizationRepository.findChildren(triggeredNode.getOrgId());
 			if (resolvedChildren.isEmpty()) {
@@ -110,8 +110,8 @@ public class OrganizationService {
 	}
 
 	private OrganizationEntity findLastDuplicateBeforeBranch(OrganizationEntity start) {
-		String firstOrg = start.getName();
-		OrganizationEntity current = start;
+		var firstOrg = start.getName();
+		var current = start;
 		while (Objects.equals(firstOrg, current.getName())) {
 			List<OrganizationEntity> children = organizationRepository.findChildren(current.getOrgId());
 

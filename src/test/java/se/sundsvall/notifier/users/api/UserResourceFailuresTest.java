@@ -84,7 +84,7 @@ class UserResourceFailuresTest {
 	@Test
 	void getUserWithInvalidEmail() {
 		// Arrange
-		final String email = "kallekula";
+		final var email = "kallekula";
 
 		// Act
 		final var response = webTestClient.get().uri("/api/users/emails/{email}", email)

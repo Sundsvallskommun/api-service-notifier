@@ -86,7 +86,7 @@ public class JwtUtil {
 	 */
 	public boolean validateToken(String token, String email) {
 		try {
-			final String extracted = extractUsername(token);
+			final var extracted = extractUsername(token);
 			return extracted != null && extracted.equals(email) && validateToken(token);
 		} catch (Exception e) {
 			return false;

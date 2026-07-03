@@ -26,23 +26,23 @@ class MockFileManagerTest {
 
 	@Test
 	void downloadFile_copiesFileFromTempToIncoming() throws IOException {
-		Path tempSource = tempDir.resolve("temp");
-		Path incomingDir = tempDir.resolve("incoming");
+		var tempSource = tempDir.resolve("temp");
+		var incomingDir = tempDir.resolve("incoming");
 		Files.createDirectories(tempSource);
 
-		String content = "col1;col2\nval1;val2";
+		var content = "col1;col2\nval1;val2";
 		Files.writeString(tempSource.resolve("OrgExport.csv"), content);
 
 		mockFileManager.downloadFile(incomingDir, "OrgExport.csv");
 
-		Path copied = incomingDir.resolve("OrgExport.csv");
+		var copied = incomingDir.resolve("OrgExport.csv");
 		assertThat(copied).exists();
 		assertThat(copied).hasContent(content);
 	}
 
 	@Test
 	void downloadFile_whenSourceFileMissing_doesNotThrow() {
-		Path incomingDir = tempDir.resolve("incoming");
+		var incomingDir = tempDir.resolve("incoming");
 
 		// Source file does not exist under fileSourceDir -> Files.copy throws, which the mock swallows.
 		assertThatCode(() -> mockFileManager.downloadFile(incomingDir, "missing.csv"))

@@ -47,7 +47,7 @@ class UserMapperTest {
 		final var phoneNumber = "99070121212";
 		final var municipalityName = "Sundsvall";
 		final var status = "ACTIVE";
-		final String password = "password";
+		final var password = "password";
 
 		final var userRequest = UserRequest.create().withEmail(email)
 			.withPhoneNumber(phoneNumber)

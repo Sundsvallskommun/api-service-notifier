@@ -43,8 +43,8 @@ public class LoginResource {
 	@PostMapping("/login")
 	@Operation(summary = "Login as a user")
 	public ResponseEntity<String> login(@RequestBody @Valid LoginRequest loginRequest, HttpServletResponse response) {
-		String token = authenticationService.login(loginRequest).getToken();
-		ResponseCookie cookie = ResponseCookie.from("token", token)
+		var token = authenticationService.login(loginRequest).getToken();
+		var cookie = ResponseCookie.from("token", token)
 			.httpOnly(true)
 			.secure(true)
 			.path("/")
@@ -58,7 +58,7 @@ public class LoginResource {
 	@PostMapping("/logout")
 	@Operation(summary = "Logout")
 	public ResponseEntity<String> logout(HttpServletResponse response) {
-		ResponseCookie deleteCookie = ResponseCookie.from("token", "")
+		var deleteCookie = ResponseCookie.from("token", "")
 			.httpOnly(true)
 			.secure(true)
 			.path("/")

@@ -36,7 +36,7 @@ public class GroupService {
 		List<GroupResponse> groupList = new ArrayList<>();
 
 		for (GroupEntity group : groups) {
-			GroupResponse groupResponse = mapper.mapToGroupResponse(group);
+			var groupResponse = mapper.mapToGroupResponse(group);
 			groupList.add(groupResponse);
 		}
 		return groupList;

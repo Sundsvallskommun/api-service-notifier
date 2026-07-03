@@ -22,7 +22,7 @@ class GetUserIT extends AbstractAppTest {
 
     @Test
     void test01_getUserByEmail() {
-        final String email = "testmail1@sundsvall.se";
+        final var email = "testmail1@sundsvall.se";
 		
         setupCall()
                 .withServicePath("/api/users/emails/".concat(email))

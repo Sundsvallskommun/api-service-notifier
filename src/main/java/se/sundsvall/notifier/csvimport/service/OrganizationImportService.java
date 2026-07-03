@@ -40,8 +40,8 @@ public class OrganizationImportService {
 
 	public void importOrganizations(Path orgCsv) {
 
-		final CsvMapper csvMapper = new CsvMapper();
-		final CsvSchema schema = buildOrganizationSchema();
+		final var csvMapper = new CsvMapper();
+		final var schema = buildOrganizationSchema();
 
 		final List<OrganizationRecord> batch = new ArrayList<>(batchSize);
 		int processed = 0;

@@ -30,17 +30,17 @@ class AbstractFileManagerTest {
 
 	@Test
 	void testMoveOrganizationFiles() throws IOException {
-		Path sourceDir = tempDir.resolve("incoming");
-		Path targetDir = tempDir.resolve("processed");
+		var sourceDir = tempDir.resolve("incoming");
+		var targetDir = tempDir.resolve("processed");
 		Files.createDirectories(sourceDir);
-		String content = "string";
+		var content = "string";
 
-		Path orgCsv = sourceDir.resolve("OrgExport.csv");
+		var orgCsv = sourceDir.resolve("OrgExport.csv");
 		Files.writeString(orgCsv, content);
 
 		fileManager.moveFile(orgCsv, targetDir);
 
-		Path moved = targetDir.resolve("OrgExport.csv");
+		var moved = targetDir.resolve("OrgExport.csv");
 		assertThat(moved).exists();
 		assertThat(orgCsv).doesNotExist();
 		assertThat(moved).hasContent(content);
@@ -48,18 +48,18 @@ class AbstractFileManagerTest {
 
 	@Test
 	void testMoveEmployeeFiles() throws IOException {
-		Path sourceDir = tempDir.resolve("incoming");
-		Path targetDir = tempDir.resolve("processed");
+		var sourceDir = tempDir.resolve("incoming");
+		var targetDir = tempDir.resolve("processed");
 		Files.createDirectories(sourceDir);
 		Files.createDirectories(targetDir);
-		String content = "string";
+		var content = "string";
 
-		Path empCsv = sourceDir.resolve("EmpExport.csv");
+		var empCsv = sourceDir.resolve("EmpExport.csv");
 		Files.writeString(empCsv, content);
 
 		fileManager.moveFile(empCsv, targetDir);
 
-		Path moved = targetDir.resolve("EmpExport.csv");
+		var moved = targetDir.resolve("EmpExport.csv");
 		assertThat(moved).exists();
 		assertThat(empCsv).doesNotExist();
 		assertThat(moved).hasContent(content);
@@ -67,13 +67,13 @@ class AbstractFileManagerTest {
 
 	@Test
 	void testMoveFile_whenTargetDirIsAFile_shouldThrowIllegalStateException() throws IOException {
-		Path incomingDir = tempDir.resolve("incoming");
+		var incomingDir = tempDir.resolve("incoming");
 		Files.createDirectories(incomingDir);
 
-		Path filePath = incomingDir.resolve("OrgExport.csv");
+		var filePath = incomingDir.resolve("OrgExport.csv");
 		Files.writeString(filePath, "string");
 
-		Path processedDir = tempDir.resolve("processed");
+		var processedDir = tempDir.resolve("processed");
 		Files.writeString(processedDir, "file");
 
 		assertThatThrownBy(() -> fileManager.moveFile(filePath, processedDir))
@@ -82,7 +82,7 @@ class AbstractFileManagerTest {
 
 	@Test
 	void testDeletePreviouslyProcessedFile() throws IOException {
-		Path processed = tempDir.resolve("processed.csv");
+		var processed = tempDir.resolve("processed.csv");
 		Files.writeString(processed, "string");
 		assertThat(processed).exists();
 
@@ -93,7 +93,7 @@ class AbstractFileManagerTest {
 
 	@Test
 	void deleteProcessedFileWhenFileDoesNotExistTest() throws IOException {
-		Path dir = tempDir.resolve("dir");
+		var dir = tempDir.resolve("dir");
 		Files.createDirectory(dir);
 		Files.writeString(dir.resolve("file.txt"), "test");
 
@@ -104,7 +104,7 @@ class AbstractFileManagerTest {
 
 	@Test
 	void verifyReadableWhenNoFileTest() {
-		Path missingFile = tempDir.resolve("missing.csv");
+		var missingFile = tempDir.resolve("missing.csv");
 
 		assertThatThrownBy(() -> fileManager.verifyReadable(missingFile, "ORG"))
 			.isInstanceOf(IllegalStateException.class)
@@ -113,7 +113,7 @@ class AbstractFileManagerTest {
 
 	@Test
 	void verifyReadable_whenFileExists_doesNotThrow() throws IOException {
-		Path file = tempDir.resolve("OrgExport.csv");
+		var file = tempDir.resolve("OrgExport.csv");
 		Files.writeString(file, "string");
 
 		assertThatCode(() -> fileManager.verifyReadable(file, "ORG")).doesNotThrowAnyException();
@@ -121,7 +121,7 @@ class AbstractFileManagerTest {
 
 	@Test
 	void verifyReadable_throwsException() throws IOException {
-		Path directory = tempDir.resolve("directory");
+		var directory = tempDir.resolve("directory");
 		Files.createDirectory(directory);
 
 		assertThatThrownBy(() -> fileManager.verifyReadable(directory, "ORG"))

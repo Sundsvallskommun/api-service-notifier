@@ -32,7 +32,7 @@ class DeleteUserIT extends AbstractAppTest {
 
     @Test
     void test01_deleteUserByEmail() {
-        final String email = "testmail1@sundsvall.se";
+        final var email = "testmail1@sundsvall.se";
         assertThat(userRepository.findByEmail(email)).isPresent();
 		
         setupCall()

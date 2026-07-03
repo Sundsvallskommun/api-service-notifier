@@ -41,7 +41,7 @@ public class EmployeeService {
 	public Page<EmployeeWithOrgNameResponse> getEmployeesWithSearch(String search, Pageable pageable) {
 
 		String[] terms = search.trim().toLowerCase().split("\\s+");
-		String searchTerm1 = terms[0];
+		var searchTerm1 = terms[0];
 		String searchTerm2 = null;
 		if (terms.length > 1) {
 			searchTerm2 = terms[1];

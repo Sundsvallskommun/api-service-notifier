@@ -62,7 +62,7 @@ public class UpdateUserRequest extends BaseUserRequest {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		UpdateUserRequest that = (UpdateUserRequest) o;
+		var that = (UpdateUserRequest) o;
 		return super.equals(o) && Objects.equals(email, that.email);
 	}
 

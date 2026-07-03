@@ -74,7 +74,7 @@ class MessageServiceTest {
 			"sender",
 			recipients,
 			MessageType.TEAMS_AND_SMS);
-		MessageRecipientEntity recipient = new MessageRecipientEntity();
+		var recipient = new MessageRecipientEntity();
 
 		var message = MessageEntity.builder().withId(1L).build();
 
@@ -150,11 +150,11 @@ class MessageServiceTest {
 
 	@Test
 	void sendMessageTest() {
-		EmployeeEntity employee = new EmployeeEntity();
+		var employee = new EmployeeEntity();
 		employee.setEmail("test@example.com");
 		employee.setWorkMobile("+46701234567");
-		MessageType messageStatus = MessageType.TEAMS_AND_SMS;
-		String content = "this is message test";
+		var messageStatus = MessageType.TEAMS_AND_SMS;
+		var content = "this is message test";
 
 		when(phoneNumberUtil.cleanPhoneNumber(anyString()))
 			.thenReturn("+46701234567");
@@ -173,11 +173,11 @@ class MessageServiceTest {
 
 	@Test
 	void sendMessageToAll_shouldProcessAllEmployeesAcrossPages() {
-		EmployeeEntity employee1 = new EmployeeEntity();
+		var employee1 = new EmployeeEntity();
 		employee1.setEmail("test1@example.com");
 		employee1.setWorkMobile("+46701234567");
 
-		EmployeeEntity employee2 = new EmployeeEntity();
+		var employee2 = new EmployeeEntity();
 		employee2.setEmail("test2@example.com");
 		employee2.setWorkMobile("+46707654321");
 
@@ -250,8 +250,8 @@ class MessageServiceTest {
 		Long messageId = 1L;
 		Pageable pageable = PageRequest.of(0, 2);
 
-		MessageRecipientEntity entity = new MessageRecipientEntity();
-		MessageRecipientResponse response = mock(MessageRecipientResponse.class);
+		var entity = new MessageRecipientEntity();
+		var response = mock(MessageRecipientResponse.class);
 		Page<MessageRecipientEntity> entityPage = new PageImpl<>(List.of(entity));
 
 		when(messageRecipientRepository.findByMessageId(messageId, pageable))
@@ -260,7 +260,7 @@ class MessageServiceTest {
 		when(messageMapper.mapToRecipientResponse(entity))
 			.thenReturn(response);
 
-		Page<MessageRecipientResponse> result = messageService.getRecipientsWithMessageId(messageId, pageable);
+		var result = messageService.getRecipientsWithMessageId(messageId, pageable);
 
 		assertThat(result.getContent()).hasSize(1);
 		assertThat(result.getContent().getFirst()).isEqualTo(response);

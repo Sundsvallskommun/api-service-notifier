@@ -74,7 +74,7 @@ public abstract class BaseUserRequest {
 		if (o == null || getClass() != o.getClass()) {
 			return false;
 		}
-		BaseUserRequest that = (BaseUserRequest) o;
+		var that = (BaseUserRequest) o;
 		return Objects.equals(phoneNumber, that.phoneNumber)
 			&& Objects.equals(municipalityName, that.municipalityName)
 			&& Objects.equals(status, that.status)

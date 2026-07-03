@@ -7,7 +7,6 @@ import se.sundsvall.notifier.security.JwtUtil;
 import se.sundsvall.notifier.users.api.model.JwtResponse;
 import se.sundsvall.notifier.users.api.model.LoginRequest;
 import se.sundsvall.notifier.users.integration.db.UserRepository;
-import se.sundsvall.notifier.users.integration.db.model.UserEntity;
 import se.sundsvall.notifier.users.integration.db.model.enums.Status;
 
 import static org.springframework.http.HttpStatus.FORBIDDEN;
@@ -27,7 +26,7 @@ public class AuthenticationService {
 	}
 
 	public JwtResponse login(LoginRequest loginRequest) {
-		UserEntity user = userRepository.findByEmail(loginRequest.getEmail())
+		var user = userRepository.findByEmail(loginRequest.getEmail())
 			.orElseThrow(() -> Problem.valueOf(UNAUTHORIZED, "Invalid credentials"));
 
 		if (!passwordEncoder.matches(loginRequest.getPassword(), (user.getPassword()))) {
@@ -42,7 +41,7 @@ public class AuthenticationService {
 			throw Problem.valueOf(FORBIDDEN, "Account inactive");
 		}
 
-		String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
+		var token = jwtService.generateToken(user.getEmail(), user.getRole().name());
 		return new JwtResponse(token);
 	}
 

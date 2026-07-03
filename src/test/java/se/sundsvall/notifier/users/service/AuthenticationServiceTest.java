@@ -9,7 +9,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.notifier.security.JwtUtil;
-import se.sundsvall.notifier.users.api.model.JwtResponse;
 import se.sundsvall.notifier.users.api.model.LoginRequest;
 import se.sundsvall.notifier.users.integration.db.UserRepository;
 import se.sundsvall.notifier.users.integration.db.model.UserEntity;
@@ -37,7 +36,7 @@ class AuthenticationServiceTest {
 			.withEmail("test@email.se");
 		final var token = "token";
 		final var hashedPassword = "hashedPassword";
-		final UserEntity userEntity = UserEntity.create()
+		final var userEntity = UserEntity.create()
 			.withEmail("test@email.se")
 			.withPassword(hashedPassword);
 		when(userRepositoryMock.findByEmail(loginRequest.getEmail()))
@@ -47,7 +46,7 @@ class AuthenticationServiceTest {
 		when(jwtServiceMock.generateToken(loginRequest.getEmail(), "USER"))
 			.thenReturn(token);
 
-		JwtResponse response = authenticationService.login(loginRequest);
+		var response = authenticationService.login(loginRequest);
 		assertThat(response).isNotNull();
 		assertThat(response.getToken()).isEqualTo(token);
 	}

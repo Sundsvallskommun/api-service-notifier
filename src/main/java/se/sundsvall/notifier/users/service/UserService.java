@@ -42,7 +42,7 @@ public class UserService {
 	public UserResponse createUser(UserRequest userRequest) {
 
 		if (userRepository.findByEmail(userRequest.getEmail()).isEmpty()) {
-			String hashedPassword = passwordEncoder.encode(userRequest.getPassword());
+			var hashedPassword = passwordEncoder.encode(userRequest.getPassword());
 			final var userEntity = userRepository.save(userMapper.toUserEntity(userRequest, hashedPassword));
 			return userMapper.toUserResponse(userEntity);
 		}

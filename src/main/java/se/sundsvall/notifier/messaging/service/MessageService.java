@@ -62,12 +62,12 @@ public class MessageService {
 		for (EmployeeEntity employee : employees) {
 			try {
 				var delivered = sendMessageToEmployee(employee, messageRequest.messageType(), messageRequest.content());
-				MessageRecipientEntity messageRecipient = messageMapper.toMessageRecipient(employee, delivered);
+				var messageRecipient = messageMapper.toMessageRecipient(employee, delivered);
 				messageRecipient.setMessage(savedMessage);
 				messageRecipientRepository.save(messageRecipient);
 			} catch (Exception e) {
 				log.error("Failed to send to employee {}", employee.getId(), e);
-				MessageRecipientEntity messageRecipient = messageMapper.toMessageRecipient(employee, MessageRecipientEntity.DeliveryStatus.FAILED);
+				var messageRecipient = messageMapper.toMessageRecipient(employee, MessageRecipientEntity.DeliveryStatus.FAILED);
 				messageRecipient.setMessage(savedMessage);
 				messageRecipientRepository.save(messageRecipient);
 			}
@@ -132,7 +132,7 @@ public class MessageService {
 
 	public MessageRecipientEntity.DeliveryStatus sendMessageToEmployee(EmployeeEntity employee, MessageType messageType, String content) {
 		boolean teamsSuccess = false;
-		MessageStatus smsSuccess = MessageStatus.NOT_SENT;
+		var smsSuccess = MessageStatus.NOT_SENT;
 		boolean isTeamsMessage = messageType == MessageType.TEAMS || messageType == MessageType.TEAMS_AND_SMS;
 		boolean isSmsMessage = messageType == MessageType.SMS || messageType == MessageType.TEAMS_AND_SMS;
 
@@ -148,7 +148,7 @@ public class MessageService {
 
 		}
 
-		String phoneNumber = phoneNumberUtil.cleanPhoneNumber(employee.getWorkMobile());
+		var phoneNumber = phoneNumberUtil.cleanPhoneNumber(employee.getWorkMobile());
 		if (isSmsMessage && phoneNumber != null) {
 			smsSuccess = smsSenderIntegration.sendSms("2281",
 				messageMapper.toSendSmsDto(content, phoneNumber));

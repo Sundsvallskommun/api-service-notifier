@@ -85,7 +85,7 @@ class MessageResourceTest {
 
 	@Test
 	void getMessageById_ok() {
-		String sender = "test@sundsvall.se";
+		var sender = "test@sundsvall.se";
 		Long messageId = 1L;
 		final var response = webTestClient.get()
 			.uri(BASE_PATH + "/{messageId}/{sender}", messageId, sender)
@@ -103,7 +103,7 @@ class MessageResourceTest {
 
 	@Test
 	void getMessageById_invalidSender() {
-		String sender = "no-email";
+		var sender = "no-email";
 		Long messageId = 1L;
 		webTestClient.get()
 			.uri(BASE_PATH + "/{messageId}/{sender}", messageId, sender)

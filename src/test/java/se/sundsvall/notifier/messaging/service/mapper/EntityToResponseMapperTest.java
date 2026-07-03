@@ -3,9 +3,6 @@ package se.sundsvall.notifier.messaging.service.mapper;
 import java.time.LocalDateTime;
 import java.util.Set;
 import org.junit.jupiter.api.Test;
-import se.sundsvall.notifier.messaging.api.model.response.EmployeeManagerResponse;
-import se.sundsvall.notifier.messaging.api.model.response.EmployeeWithOrgNameResponse;
-import se.sundsvall.notifier.messaging.api.model.response.OrganizationResponse;
 import se.sundsvall.notifier.messaging.integration.db.model.EmployeeEntity;
 import se.sundsvall.notifier.messaging.integration.db.model.GroupEntity;
 import se.sundsvall.notifier.messaging.integration.db.model.OrganizationEntity;
@@ -87,7 +84,7 @@ public class EntityToResponseMapperTest {
 		employee.setWorkTitle("testPerson");
 		employee.setOrganization(organization);
 
-		EmployeeWithOrgNameResponse response = mapper.mapToEmployeeWithOrgNameResponse(employee);
+		var response = mapper.mapToEmployeeWithOrgNameResponse(employee);
 
 		assertThat(response.id()).isEqualTo(123L);
 		assertThat(response.personId()).isEqualTo("p1");
@@ -110,7 +107,7 @@ public class EntityToResponseMapperTest {
 		organization.setName("IT-avdelningen");
 		organization.setTreeLevel(3);
 
-		OrganizationResponse response = mapper.mapToOrganizationResponse(organization);
+		var response = mapper.mapToOrganizationResponse(organization);
 
 		assertThat(response.companyId()).isEqualTo("556000-0000");
 		assertThat(response.parentOrgId()).isEqualTo("parent-1");
@@ -133,7 +130,7 @@ public class EntityToResponseMapperTest {
 		emp.setWorkTitle("testPerson");
 		emp.setManagerCode("managerCode");
 
-		EmployeeManagerResponse response = mapper.mapToEmployeeManagerResponse(emp);
+		var response = mapper.mapToEmployeeManagerResponse(emp);
 
 		assertThat(response.managerCode()).isEqualTo("managerCode");
 		assertThat(response.id()).isEqualTo(123L);

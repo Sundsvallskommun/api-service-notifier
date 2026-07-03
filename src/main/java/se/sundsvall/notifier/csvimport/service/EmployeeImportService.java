@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import org.slf4j.Logger;
@@ -41,10 +40,10 @@ public class EmployeeImportService {
 
 	public void importEmployee(Path empCsv) {
 
-		final Instant importStartedAt = ingestionService.beginEmployeeImport();
+		final var importStartedAt = ingestionService.beginEmployeeImport();
 
-		final CsvMapper csvMapper = new CsvMapper();
-		final CsvSchema schema = buildEmployeeSchema();
+		final var csvMapper = new CsvMapper();
+		final var schema = buildEmployeeSchema();
 
 		final List<EmployeeRecord> batch = new ArrayList<>(batchSize);
 		int processed = 0;

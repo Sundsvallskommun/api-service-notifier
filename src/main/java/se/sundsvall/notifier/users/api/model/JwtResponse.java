@@ -33,7 +33,7 @@ public class JwtResponse {
 		if (obj == null || getClass() != obj.getClass()) {
 			return false;
 		}
-		JwtResponse other = (JwtResponse) obj;
+		var other = (JwtResponse) obj;
 		return Objects.equals(token, other.token);
 	}
 

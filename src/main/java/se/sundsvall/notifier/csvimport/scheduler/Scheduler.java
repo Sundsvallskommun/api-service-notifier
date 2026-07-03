@@ -54,8 +54,8 @@ public class Scheduler {
 
 	public void importOrganizationsJob() {
 
-		Path orgCsv = incomingDir.resolve(orgFileName);
-		Path oldOrgCsv = processedDir.resolve(orgFileName);
+		var orgCsv = incomingDir.resolve(orgFileName);
+		var oldOrgCsv = processedDir.resolve(orgFileName);
 		try {
 
 			fileManager.downloadFile(incomingDir, orgFileName);
@@ -70,8 +70,8 @@ public class Scheduler {
 
 	public void importEmployeesJob() {
 
-		Path empCsv = incomingDir.resolve(empFileName);
-		Path oldEmpFile = processedDir.resolve(empFileName);
+		var empCsv = incomingDir.resolve(empFileName);
+		var oldEmpFile = processedDir.resolve(empFileName);
 		try {
 
 			fileManager.downloadFile(incomingDir, empFileName);

@@ -39,7 +39,7 @@ public class OrganizationImportServiceTest {
 	@Test
 	void importOrganizations() throws Exception {
 		// Arrange
-		final Path orgCsv = tempDir.resolve("org.csv");
+		final var orgCsv = tempDir.resolve("org.csv");
 		Files.writeString(orgCsv, """
 			CompanyId;OrgId;OrgName;ParentId;TreeLevel
 			1;A;Org A;13;1
@@ -60,7 +60,7 @@ public class OrganizationImportServiceTest {
 	@Test
 	void importOrganization_throwsException() {
 		// Arrange
-		final Path missing = tempDir.resolve("missing.csv");
+		final var missing = tempDir.resolve("missing.csv");
 
 		// Act & Assert
 		assertThatThrownBy(() -> importService.importOrganizations(missing))

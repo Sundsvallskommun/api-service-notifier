@@ -27,8 +27,8 @@ class SftpFileManagerTest {
 
 	@Test
 	void downloadFileFailureThrows() {
-		Path incomingDir = tempDir.resolve("incoming");
-		String fileName = "file.csv";
+		var incomingDir = tempDir.resolve("incoming");
+		var fileName = "file.csv";
 
 		when(sftpProperties.username()).thenReturn("username");
 		when(sftpProperties.password()).thenReturn("password");

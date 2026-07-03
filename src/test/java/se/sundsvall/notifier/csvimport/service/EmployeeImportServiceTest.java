@@ -43,7 +43,7 @@ public class EmployeeImportServiceTest {
 	@Test
 	void importEmployeePassesParsedRows() throws Exception {
 		// Arrange
-		final Path empCsv = tempDir.resolve("emp.csv");
+		final var empCsv = tempDir.resolve("emp.csv");
 		Files.writeString(empCsv, """
 			PersonId;Givenname;Lastname;WorkMobile;WorkPhone;Title;OrgId;PrimaryEMailAddress;ManagerId;ManagerCode
 			10;förnamn;efternamn;;;Lärare;NoOrg;eva@test.com;;
@@ -76,7 +76,7 @@ public class EmployeeImportServiceTest {
 	@Test
 	void importEmployee_throwsException() {
 		// Arrange
-		final Path missing = tempDir.resolve("missing.csv");
+		final var missing = tempDir.resolve("missing.csv");
 
 		// Act & Assert
 		assertThatThrownBy(() -> importService.importEmployee(missing))

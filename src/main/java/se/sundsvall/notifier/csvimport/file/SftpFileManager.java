@@ -3,7 +3,6 @@ package se.sundsvall.notifier.csvimport.file;
 import java.nio.file.Path;
 import org.apache.commons.vfs2.FileObject;
 import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemManager;
 import org.apache.commons.vfs2.FileSystemOptions;
 import org.apache.commons.vfs2.Selectors;
 import org.apache.commons.vfs2.VFS;
@@ -31,8 +30,8 @@ public class SftpFileManager extends AbstractFileManager {
 		FileObject local = null;
 		FileObject remote = null;
 		try {
-			FileSystemManager manager = VFS.getManager();
-			FileSystemOptions options = new FileSystemOptions();
+			var manager = VFS.getManager();
+			var options = new FileSystemOptions();
 
 			var builder = SftpFileSystemConfigBuilder.getInstance();
 			builder.setConnectTimeout(options, sftpProperties.connectTimeout());

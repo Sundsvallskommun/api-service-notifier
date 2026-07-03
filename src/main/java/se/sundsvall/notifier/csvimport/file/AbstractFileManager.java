@@ -51,7 +51,7 @@ public abstract class AbstractFileManager implements FileManager {
 
 		try {
 			long size = Files.size(path);
-			String firstLine = Files.readAllLines(path, StandardCharsets.UTF_8).stream()
+			var firstLine = Files.readAllLines(path, StandardCharsets.UTF_8).stream()
 				.findFirst()
 				.orElse("");
 			log.info("[{}] OK. Size={} bytes. First line: {}", label, size, firstLine);
