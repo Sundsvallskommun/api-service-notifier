@@ -6,5 +6,6 @@ truncate table message;
 truncate table user_group;
 truncate table employee_user_group;
 truncate table message_recipient;
+truncate table users;
 
 set foreign_key_checks = 1;

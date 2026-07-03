@@ -1,0 +1,8 @@
+{
+	"id": 1,
+	"email": "testmail1@sundsvall.se",
+	"phoneNumber": "0701740669",
+	"municipalityName": "Sundsvall",
+	"status": "ACTIVE",
+	"role": "USER"
+}

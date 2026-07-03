@@ -1,9 +1,9 @@
 #========================================
-# Test profile settings (IT tests)
+# Test profile settings (IT / AppTests)
 #========================================
-
 jwt:
   secret: dGVzdFNlY3JldEtleUZvclRlc3RpbmdQdXJwb3Nlc09ubHkxMg==
+  expiration: 86400000
 
 spring:
   datasource:
@@ -11,3 +11,26 @@ spring:
     url: jdbc:tc:mariadb:10.6.14:///
   flyway:
     enabled: true
+
+integration:
+  sms-sender:
+    base-url: http://localhost:${wiremock.server.port:9090}/sms-sender
+  teams-sender:
+    base-url: http://localhost:${wiremock.server.port:9090}/teams-sender
+  sftp:
+    username: test
+    password: test
+    remote-host: sftp://localhost/test
+    connect-timeout: "PT15S"
+    session-timeout: "PT15S"
+
+import:
+  enabled: false
+  incoming-dir: ${java.io.tmpdir}/csv/incoming
+  processed-dir: ${java.io.tmpdir}/csv/processed
+  failed-dir: ${java.io.tmpdir}/csv/failed
+  file-source-dir: ${java.io.tmpdir}/csv/temp
+  org-file-name: OrgExport.csv
+  emp-file-name: EmpExport.csv
+  employee-batch-size: 100
+  organization-batch-size: 100
